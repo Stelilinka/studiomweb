@@ -104,7 +104,7 @@ function SmallPill({
       type="button"
       onClick={onClick}
       data-testid={testId}
-      className={`gloss-hover inline-flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-[10px] tracking-[0.16em] text-white uppercase transition-transform duration-300 hover:-translate-y-0.5 ${bg}`}
+      className={`gloss-hover inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-[11px] tracking-[0.16em] text-white uppercase transition-transform duration-300 hover:-translate-y-0.5 ${bg}`}
     >
       {children}
       <ArrowRight className="size-3" aria-hidden />
@@ -126,7 +126,7 @@ function SectionTitle({ children, testId }: { children: string; testId?: string 
   return (
     <div className="flex items-center justify-center gap-4" data-testid={testId}>
       <span className="h-px w-10 bg-gradient-to-r from-transparent to-[#D9BFB2] sm:w-20" aria-hidden />
-      <h2 className="font-heading text-[1.35rem] tracking-[0.2em] text-[#6B4F45] uppercase sm:text-[1.7rem]">
+      <h2 className="font-heading text-[1.5rem] tracking-[0.2em] text-[#6B4F45] uppercase sm:text-[1.95rem]">
         {children}
       </h2>
       <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#D9BFB2] sm:w-20" aria-hidden />
@@ -192,14 +192,14 @@ export default function Home() {
 
               {/* centrální claim */}
               <div className="flex flex-col items-center justify-center px-6 py-12 text-center sm:px-10 sm:py-16">
-                <p className="font-heading text-[10px] tracking-[0.42em] text-[#A98F84] uppercase sm:text-xs">
+                <p className="font-heading text-[11px] tracking-[0.42em] text-[#A98F84] uppercase sm:text-sm">
                   Ideální manikúra
                 </p>
-                <h1 className="mt-4 font-heading text-[2.9rem] leading-[0.92] tracking-[0.06em] text-[#5E4238] uppercase sm:text-[4.1rem]">
+                <h1 className="mt-4 font-heading text-[3.2rem] leading-[0.92] tracking-[0.06em] text-[#5E4238] uppercase sm:text-[4.7rem]">
                   Studio
                   <span className="mt-1 block text-[#C08272]">M</span>
                 </h1>
-                <p className="mt-4 font-script text-2xl text-[#B8776A] sm:text-3xl">
+                <p className="mt-4 font-script text-[1.7rem] text-[#B8776A] sm:text-4xl">
                   krásné nehty na dosah ruky ♥
                 </p>
 
@@ -215,7 +215,7 @@ export default function Home() {
                         strokeWidth={1.2}
                         aria-hidden
                       />
-                      <p className="text-[10px] leading-tight tracking-[0.1em] text-[#6B4F45] uppercase">
+                      <p className="text-[11px] leading-tight tracking-[0.1em] text-[#6B4F45] uppercase">
                         {f.title}
                         <span className="block font-normal tracking-[0.06em] text-[#A98F84] normal-case">
                           {f.sub}
@@ -227,7 +227,7 @@ export default function Home() {
 
                 {/* box online objednání */}
                 <div className="mt-8 w-full max-w-xs rounded-2xl border border-[#E5CFC6] bg-white/75 p-4 backdrop-blur-sm">
-                  <p className="font-heading text-[11px] tracking-[0.2em] text-[#6B4F45] uppercase">
+                  <p className="font-heading text-[12px] tracking-[0.2em] text-[#6B4F45] uppercase">
                     Online objednání
                     <span className="block text-[#A98F84]">bez čekání</span>
                   </p>
@@ -242,7 +242,7 @@ export default function Home() {
                       document.getElementById("rezervace")?.scrollIntoView({ behavior: "smooth" })
                     }
                     data-testid="hero-secondary-wizard-button"
-                    className="mt-2.5 w-full text-[10px] tracking-[0.12em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272]"
+                    className="mt-2.5 w-full text-[11px] tracking-[0.12em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272]"
                   >
                     nebo si vyberte sama v kalendáři
                   </button>
@@ -348,10 +348,10 @@ export default function Home() {
                     aria-hidden
                   />
                   <div className="absolute inset-x-0 bottom-0 flex flex-col items-center p-6 text-center">
-                    <h3 className="font-heading text-[1.45rem] leading-tight tracking-[0.14em] text-[#5E4238] uppercase sm:text-[1.7rem]">
+                    <h3 className="font-heading text-[1.6rem] leading-tight tracking-[0.14em] text-[#5E4238] uppercase sm:text-[1.9rem]">
                       {service.name}
                     </h3>
-                    <p className="mt-1.5 font-heading text-xl text-[#6B4F45]">{service.price}</p>
+                    <p className="mt-1.5 font-heading text-[1.4rem] text-[#6B4F45]">{service.price}</p>
                     <p className="mt-1 flex items-center gap-1.5 text-[11px] tracking-[0.12em] text-[#8A7972] uppercase">
                       <Clock className="size-3" aria-hidden /> {service.duration_min} min
                     </p>
@@ -391,10 +391,10 @@ export default function Home() {
                     aria-hidden
                   />
                   <div className="absolute inset-x-0 bottom-0 flex flex-col items-center p-5 text-center">
-                    <h3 className="font-heading text-lg leading-tight tracking-[0.12em] text-[#5E4238] uppercase">
+                    <h3 className="font-heading text-[1.2rem] leading-tight tracking-[0.12em] text-[#5E4238] uppercase">
                       {service.name}
                     </h3>
-                    <p className="mt-1 font-heading text-lg text-[#6B4F45]">{service.price}</p>
+                    <p className="mt-1 font-heading text-[1.25rem] text-[#6B4F45]">{service.price}</p>
                     <div className="mt-3">
                       <SmallPill
                         onClick={() => pickService(service.id)}
@@ -416,7 +416,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <SectionTitle testId="gallery-section-title">Ukázky prací</SectionTitle>
-            <p className="mx-auto mt-4 max-w-xl text-center text-sm leading-relaxed text-[#8A7972]">
+            <p className="mx-auto mt-4 max-w-xl text-center text-[0.95rem] leading-relaxed text-[#8A7972]">
               Každá modeláž je originál — od jemné nude klasiky po zdobení, které
               vydrží celé týdny.
             </p>
@@ -464,7 +464,7 @@ export default function Home() {
             <p className="mt-2 font-script text-2xl text-[#B8776A]">
               a my to uvidíme dřív, než přijdete
             </p>
-            <p className="mt-5 max-w-lg text-sm leading-relaxed text-[#6B4F45]">
+            <p className="mt-5 max-w-lg text-[0.95rem] leading-relaxed text-[#6B4F45]">
               Při rezervaci napíšete svůj vysněný design. Agent Claude z popisu
               připraví precizní zadání a druhý agent vygeneruje fotorealistický
               náhled vašich nehtů — uložený přímo u vašeho termínu.
@@ -577,7 +577,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl">
           <Reveal>
             <SectionTitle testId="booking-section-title">Objednání online</SectionTitle>
-            <p className="mx-auto mt-4 max-w-xl text-center text-sm leading-relaxed text-[#8A7972]">
+            <p className="mx-auto mt-4 max-w-xl text-center text-[0.95rem] leading-relaxed text-[#8A7972]">
               Čtyři kroky, žádné volání. Návrh designu nehtů za vás připraví naši
               AI agenti — rovnou k vašemu termínu.
             </p>

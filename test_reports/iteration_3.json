@@ -1,0 +1,112 @@
+{
+  "iteration": 3,
+  "summary": "Retest of updated matrix (header/studio/footer logo badges, modelaz-nehtu photo replacement, large-font layout at 1280x900). 10 browser checks + 5 backend test cases (3 files) all passed on final run. One flaky browser check (chat-klara-answers-price) failed once on transient 429 console errors, passed clean on rerun -> classified flaky, not a bug.",
+  "passed": 15,
+  "failed": 0,
+  "flaky": 1,
+  "blocked": 0,
+  "test_error": 0,
+  "retest_needed": false,
+  "bugs": [],
+  "action_items": [],
+  "checks": [
+    {
+      "criterion": "Nové logo studia je vidět v hlavičce, menu i patičce (header-logo-badge, studio-logo-badge, footer-logo-badge)",
+      "name": "logo-badges-visible",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "header-logo-badge, studio-logo-badge, footer-logo-badge all visible; their *-image elements have naturalWidth > 0."
+    },
+    {
+      "criterion": "Fotka u služby 'Modeláž nehtů' už není ta růžová — nahrazena novou fotkou z static.prod-images.emergentagent.com",
+      "name": "service-photo-modelaz-updated",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "service-card-modelaz-nehtu contains <img> with src including static.prod-images.emergentagent.com and naturalWidth > 0."
+    },
+    {
+      "criterion": "Zvětšené písmo neláme layout na 1280x900",
+      "name": "desktop-large-font-no-horizontal-scroll",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "At 1280x900, scrollWidth<=innerWidth+2; h1 'STUDIO M' and all h2 section headings visible."
+    },
+    {
+      "criterion": "Zvětšené písmo neláme layout na 390x844",
+      "name": "mobile-responsive-no-horizontal-scroll",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "At 390x844, scrollWidth (390) <= innerWidth (390)+2; hero-cta-book-button visible/enabled; studio-menu-cards/menu-card-cenik visible (re-ran persisted check)."
+    },
+    {
+      "criterion": "Úvodní stránka se načte bez console errors a bez requestů se statusem >= 400",
+      "name": "homepage-loads-clean",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "hero-photo-left/right, hero-cta-book-button, hero-secondary-wizard-button visible; images naturalWidth>0; no response>=400 (re-ran persisted check)."
+    },
+    {
+      "criterion": "Ceník a předvolba služby fungují dál (5 karet, cena Kč, tlačítko PODROBNĚJI)",
+      "name": "pricing-list-loads-services",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "5 service-card-<id> found for all seeded services; each has price with Kč and PODROBNĚJI button (re-ran persisted check)."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services",
+      "name": "test_services_endpoint_returns_seeded_services",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "GET /api/services -> 200, 5 seeded services with name/description/price/duration_min."
+    },
+    {
+      "criterion": "Klik na service-select-btn-<id> scrolluje na #rezervace a wizard je v kroku 2",
+      "name": "service-select-jumps-to-step2",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "booking-step-date-picker visible and #rezervace in viewport after clicking service-select-btn-* (re-ran persisted check)."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce funguje dál",
+      "name": "booking-e2e-flow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Selected service, weekday slot, filled name/phone -> booking-success-confirmation visible (re-ran persisted check)."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce",
+      "name": "test_create_booking_end_to_end / test_availability_closed_on_sunday",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "POST /api/bookings -> 200 persisted booking (calendar_synced=false per spec deviation); duplicate slot -> 409; Sunday availability closed=true."
+    },
+    {
+      "criterion": "Chat asistentka Klára odpovídá",
+      "name": "chat-klara-answers-price",
+      "lane": "browser",
+      "status": "flaky",
+      "evidence": "First run failed on transient 'Failed to load resource: 429' console errors while waiting for hero-cta-book-button (30s timeout). Rerun immediately after passed cleanly with reply mentioning price in Kč. No backend 4xx/5xx confirmed via passing rerun and backend test below -> classified flaky, not a bug."
+    },
+    {
+      "criterion": "Chat asistentka Klára odpovídá",
+      "name": "test_chat_returns_price_answer / test_chat_history_is_retrievable",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "POST /api/chat -> 200 non-empty reply mentioning Kč; GET /api/chat/{session_id} -> turns array >=2 entries."
+    },
+    {
+      "criterion": "AI studio fotonáhled reaguje na volby (finish/shape/length options)",
+      "name": "ai-studio-preview-reacts-to-choices",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Clicking finish-option-mat, shape-option-oval, length-option-3 changed active button class and nail-preview-caption text; active photo naturalWidth>0 (re-ran persisted check)."
+    }
+  ],
+  "notes": [
+    "Updated logo-badges-visible check to also assert header-logo-badge (new testid per updated matrix), in addition to studio-logo-badge and footer-logo-badge.",
+    "Added new check service-photo-modelaz-updated for the modelaz-nehtu photo replacement criterion (static.prod-images.emergentagent.com source, naturalWidth>0).",
+    "Added new check desktop-large-font-no-horizontal-scroll for 1280x900 layout criterion; combined with existing mobile-responsive-no-horizontal-scroll (390x844) to cover both viewports in the criterion.",
+    "Backend suite (3 files, 5 tests) re-ran clean via pytest in 6.41s.",
+    "spec_deviations honored: calendar_synced=false expected (no Google Calendar secret); AI-generated design image not part of acceptance."
+  ]
+}

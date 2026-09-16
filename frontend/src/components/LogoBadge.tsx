@@ -31,7 +31,7 @@ export default function LogoBadge({
         <img
           src={STUDIO_LOGO}
           alt="Logo Studio M nails"
-          className="logo-tint size-full origin-center scale-[1.75] object-contain object-top transition-transform duration-[1200ms] group-hover:scale-[1.82] group-hover:rotate-3"
+          className="size-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.05]"
           data-testid={`${testId}-image`}
         />
         {/* lesklý přejezd přes logo */}

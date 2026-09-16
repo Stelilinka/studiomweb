@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LogoBadge from "@/components/LogoBadge";
 
 const ANCHORS = [
   { href: "#sluzby", label: "Ceník", num: "02" },
@@ -40,7 +41,7 @@ export default function SiteHeader() {
     >
       <div
         className={`mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 transition-all duration-500 sm:px-8 ${
-          scrolled ? "h-16" : "h-20"
+          scrolled ? "h-[4.5rem]" : "h-[5.5rem]"
         }`}
       >
         <a
@@ -49,14 +50,12 @@ export default function SiteHeader() {
           className="group flex items-center gap-3"
           aria-label="Studio M — domovská stránka"
         >
-          <span className="flex size-9 items-center justify-center rounded-full border border-[#E9B9AE] bg-gradient-to-br from-[#FBF1EC] to-[#EFD6C9] font-heading text-base text-[#6B4F45] transition-transform duration-500 group-hover:rotate-12">
-            SM
-          </span>
+          <LogoBadge className="w-11 shrink-0 sm:w-12" testId="header-logo-badge" />
           <span className="flex flex-col leading-none">
-            <span className="font-heading text-base tracking-[0.22em] text-[#5E4238] uppercase">
+            <span className="font-heading text-lg tracking-[0.22em] sm:text-xl text-[#5E4238] uppercase">
               Studio M
             </span>
-            <span className="font-script text-sm text-[#B8776A]">krásné nehty na dosah ruky</span>
+            <span className="font-script text-base text-[#B8776A]">krásné nehty na dosah ruky</span>
           </span>
         </a>
 
@@ -65,7 +64,7 @@ export default function SiteHeader() {
             <a
               key={a.href}
               href={a.href}
-              className="group relative flex items-baseline gap-1.5 text-[11px] tracking-[0.16em] text-[#8A7972] uppercase transition-colors duration-300 hover:text-[#C08272]"
+              className="group relative flex items-baseline gap-1.5 text-[12px] tracking-[0.16em] text-[#8A7972] uppercase transition-colors duration-300 hover:text-[#C08272]"
             >
               <span className="font-mono text-[9px] text-[#C79A7B] opacity-60">{a.num}</span>
               {a.label}
@@ -81,7 +80,7 @@ export default function SiteHeader() {
           <Link
             to="/admin"
             data-testid="nav-admin-portal-button"
-            className="hidden text-[11px] tracking-[0.16em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272] sm:block"
+            className="hidden text-[12px] tracking-[0.16em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272] sm:block"
           >
             Správa
           </Link>

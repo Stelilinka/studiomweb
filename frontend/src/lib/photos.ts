@@ -4,7 +4,7 @@
 
 // Dodané firemní podklady klientky
 export const STUDIO_LOGO =
-  "https://customer-assets-v7afamib.emergentagent.net/job_czech-chat-buddy/artifacts/j0eu20jk_WhatsApp%20Image%202026-09-16%20at%2019.18.33.jpeg";
+  "https://static.prod-images.emergentagent.com/jobs/38975200-033e-48d7-a89a-dd9139c8a9a8/images/4e0943c91343e82ca769b969ad1b97fbb8dac1e5fa14ce5f0f5ff744718d4385.jpeg";
 
 export const NAIL_PHOTOS = {
   // šalvějová francie se zlatými detaily — fotka od klientky
@@ -19,13 +19,13 @@ export const NAIL_PHOTOS = {
   manikura:
     "https://images.unsplash.com/photo-1610992015836-7c249d75782d?crop=entropy&cs=srgb&fm=jpg&w=1200&q=80&ixlib=rb-4.1.0",
   modelaz:
-    "https://images.unsplash.com/photo-1604902396830-aca29e19b067?crop=entropy&cs=srgb&fm=jpg&w=1200&q=80&ixlib=rb-4.1.0",
+    "https://static.prod-images.emergentagent.com/jobs/38975200-033e-48d7-a89a-dd9139c8a9a8/images/343b9a2a5b888387ec827cfce41a9d47923b12e5f64f1ec50f9a146fb6ad0615.jpeg",
   gelLak:
     "https://images.unsplash.com/photo-1630843599725-32ead7671867?crop=entropy&cs=srgb&fm=jpg&w=1200&q=80&ixlib=rb-4.1.0",
   nailArt:
     "https://images.pexels.com/photos/35491156/pexels-photo-35491156.jpeg?auto=compress&cs=tinysrgb&w=1200",
   zpevneni:
-    "https://images.unsplash.com/photo-1587729927069-ef3b7a5ab9b4?crop=entropy&cs=srgb&fm=jpg&w=1200&q=80&ixlib=rb-4.1.0",
+    "https://static.prod-images.emergentagent.com/jobs/38975200-033e-48d7-a89a-dd9139c8a9a8/images/9131b9744d94e8e08d53924f3aa6bd3e3093f7ce07e68c44853cb1fe0a531e0e.jpeg",
   peceONehty:
     "https://images.unsplash.com/photo-1610992015732-2449b76344bc?crop=entropy&cs=srgb&fm=jpg&w=1200&q=80&ixlib=rb-4.1.0",
   nudeDetail:
