@@ -59,7 +59,7 @@ export default function MenuCards() {
           key={card.id}
           href={card.target}
           data-testid={`menu-card-${card.id}`}
-          className="watercolor group relative flex aspect-[3/5] flex-col items-center justify-end overflow-hidden rounded-[18px] p-4 text-center transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_46px_-22px_rgba(74,59,52,0.45)]"
+          className="watercolor gloss-hover group relative flex aspect-[3/5] flex-col items-center justify-end overflow-hidden rounded-[18px] p-4 text-center transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_46px_-22px_rgba(74,59,52,0.45)]"
           style={{ background: card.bg, color: card.ink }}
         >
           {/* jemný zlatý obrys jako v předloze */}

@@ -86,3 +86,10 @@ Klasická manikúra 450 Kč/45 min · Gel lak 650 Kč/60 min · Modeláž nehtů
 `cd /app/backend && python seed.py` — vloží 3 demo rezervace (Tereza K.
 potvrzená s popisem designu, Karolína M. nová, Michaela V. dokončená s
 ukázkovým promptem). Idempotentní (přeskočí, pokud už rezervace existují).
+
+## Redesign (prémiový vizuál) — aktualizace
+- Home.tsx přepracován: asymetrický editorial hero (oversized typografie + vrstvená fotokompozice), běžící pás claimů, číslované nadpisy sekcí (01–07), ceník jako redakční seznam s fotonáhledem při hoveru, mozaiková galerie, tmavá AI sekce (#5E4238).
+- SiteHeader.tsx: scroll-aware (transparentní → krémový pás) + indikátor průběhu čtení.
+- index.css: nové animace `marquee`, utilita `hairline-grid`.
+- ANTHROPIC_API_KEY vyměněn na nový funkční klíč (Klára odpovídá přes provider=anthropic, bez fallbacku).
+- Google Calendar stále MOCKED (chybí GOOGLE_CLIENT_SECRET).

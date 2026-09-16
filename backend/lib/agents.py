@@ -40,32 +40,57 @@ CLAUDE_SYSTEM = (
 )
 
 
-def _anthropic_key() -> str:
-    key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("EMERGENT_LLM_KEY")
-    if not key:
-        raise RuntimeError("Chybí ANTHROPIC_API_KEY (nebo EMERGENT_LLM_KEY) v backend/.env")
-    return key
+def anthropic_keys() -> list[str]:
+    """Klíče pro Claude v pořadí priority: vlastní klíč studia, pak Emergent.
+
+    Vlastní klíč může přestat platit (rotace, vypršení) — proto vracíme seznam
+    a volající zkusí další v řadě, aby asistentka i návrhy designu běžely dál.
+    """
+    keys = [os.environ.get("ANTHROPIC_API_KEY"), os.environ.get("EMERGENT_LLM_KEY")]
+    seen: set[str] = set()
+    out: list[str] = []
+    for key in keys:
+        if key and key not in seen:
+            seen.add(key)
+            out.append(key)
+    if not out:
+        raise RuntimeError("Chybí ANTHROPIC_API_KEY i EMERGENT_LLM_KEY v backend/.env")
+    return out
 
 
 async def claude_prompt_agent(design_description: str, service_name: str) -> str:
     """Agent 1 — Claude: popis zákaznice → přesný prompt pro generování obrázku."""
-    chat = LlmChat(
-        api_key=_anthropic_key(),
-        session_id=f"studio-m-prompt-{uuid.uuid4().hex[:8]}",
-        system_message=CLAUDE_SYSTEM,
-    )
-    chat.with_model("anthropic", CLAUDE_MODEL)
-    chat.with_params(max_tokens=2048)
     user_text = (
         f"Objednaná služba: {service_name}\n"
         f"Popis designu od zákaznice (česky): {design_description}"
     )
-    prompt = await chat.send_message(UserMessage(text=user_text))
-    prompt = (prompt or "").strip().strip('"').strip()
-    if not prompt:
-        raise RuntimeError("Claude nevrátil žádný prompt.")
-    logger.info("Agent 1 (Claude): prompt připraven (%d znaků)", len(prompt))
-    return prompt
+    keys = anthropic_keys()
+    last_error: Exception | None = None
+
+    for index, api_key in enumerate(keys):
+        try:
+            chat = LlmChat(
+                api_key=api_key,
+                session_id=f"studio-m-prompt-{uuid.uuid4().hex[:8]}",
+                system_message=CLAUDE_SYSTEM,
+            )
+            chat.with_model("anthropic", CLAUDE_MODEL)
+            chat.with_params(max_tokens=2048)
+            prompt = await chat.send_message(UserMessage(text=user_text))
+            prompt = (prompt or "").strip().strip('"').strip()
+            if not prompt:
+                raise RuntimeError("Claude nevrátil žádný prompt.")
+            logger.info(
+                "Agent 1 (Claude): prompt připraven (%d znaků, klíč #%d)", len(prompt), index + 1
+            )
+            return prompt
+        except Exception as exc:
+            last_error = exc
+            logger.warning(
+                "Agent 1: klíč #%d selhal (%s) — zkouším další", index + 1, str(exc)[:160]
+            )
+
+    raise RuntimeError(f"Agent 1 (Claude) selhal: {last_error}")
 
 
 def _gemini_nanobanana_sync(api_key: str, prompt: str) -> bytes:

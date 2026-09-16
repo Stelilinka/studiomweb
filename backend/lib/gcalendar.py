@@ -30,6 +30,11 @@ def is_configured() -> bool:
     )
 
 
+def env_refresh_token() -> str | None:
+    """Refresh token z backend/.env — připojí kalendář bez klikání v prohlížeči."""
+    return os.environ.get("GOOGLE_REFRESH_TOKEN") or None
+
+
 def redirect_uri() -> str:
     custom = os.environ.get("GOOGLE_REDIRECT_URI")
     if custom:
@@ -58,12 +63,18 @@ def authorization_url() -> str:
 
 
 async def get_owner_tokens() -> dict | None:
+    """Tokeny majitelky — nejdřív z .env (refresh token), pak z databáze."""
+    refresh = env_refresh_token()
+    if refresh and is_configured():
+        return {"profile": "owner", "refresh_token": refresh, "source": "env"}
     return await db.calendar_tokens.find_one({"profile": "owner"})
 
 
 async def is_connected() -> bool:
     tokens = await get_owner_tokens()
-    return bool(tokens and tokens.get("access_token"))
+    if not tokens:
+        return False
+    return bool(tokens.get("access_token") or tokens.get("refresh_token"))
 
 
 async def exchange_and_store(code: str) -> str:
@@ -113,7 +124,10 @@ def _credentials(tokens: dict) -> Credentials:
         client_secret=os.environ["GOOGLE_CLIENT_SECRET"],
         scopes=SCOPES,
     )
-    if not creds.valid and creds.refresh_token:
+    # Bez access tokenu (režim refresh tokenu z .env) si ho vyžádáme hned.
+    if not creds.token and creds.refresh_token:
+        creds.refresh(GoogleRequest())
+    elif not creds.valid and creds.refresh_token:
         creds.refresh(GoogleRequest())
     return creds
 

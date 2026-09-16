@@ -54,6 +54,34 @@ export interface CalendarStatus {
   email: string | null;
 }
 
+// ==== Chatovací asistentka (zrcadlí backend/models/chat.py) ====
+
+export type ChatRole = "user" | "assistant";
+
+export interface ChatTurn {
+  role: ChatRole;
+  content: string;
+  created_at: string;
+}
+
+export interface ChatReply {
+  session_id: string;
+  reply: string;
+  booking_id: string | null;
+  source: "agent" | "claude";
+  actions: string[];
+}
+
+export interface ChatHistory {
+  session_id: string;
+  turns: ChatTurn[];
+}
+
+export interface AgentStatus {
+  external_agent: boolean;
+  calendar_connected: boolean;
+}
+
 export const STATUS_LABELS: Record<BookingStatus, string> = {
   nova: "Nová",
   potvrzena: "Potvrzená",

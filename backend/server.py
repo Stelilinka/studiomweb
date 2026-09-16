@@ -21,6 +21,7 @@ from lib.db import client, db, ensure_indexes
 # Doménové routery (každý exportuje vlastní APIRouter)
 from routers.bookings import router as bookings_router
 from routers.calendar import router as calendar_router
+from routers.chat import router as chat_router
 from routers.services import router as services_router
 
 
@@ -69,6 +70,7 @@ async def get_status_checks():
 api_router.include_router(services_router)
 api_router.include_router(bookings_router)
 api_router.include_router(calendar_router)
+api_router.include_router(chat_router)
 
 # Include the router in the main app
 app.include_router(api_router)
