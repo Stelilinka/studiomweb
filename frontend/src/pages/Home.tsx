@@ -156,7 +156,7 @@ export default function Home() {
                   <span className="mt-1 block text-[#C08272]">M</span>
                 </h1>
                 <p className="mt-4 font-script text-2xl text-[#B8776A] sm:text-3xl">
-                  tvé nehty — tvůj styl ♥
+                  krásné nehty na dosah ruky ♥
                 </p>
 
                 {/* ikonové benefity jako v předloze */}

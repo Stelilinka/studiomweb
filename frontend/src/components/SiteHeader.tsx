@@ -28,7 +28,7 @@ export default function SiteHeader() {
             <span className="font-heading text-base tracking-[0.18em] text-[#5E4238] uppercase">
               Studio M
             </span>
-            <span className="font-script text-sm text-[#B8776A]">tvé nehty — tvůj styl</span>
+            <span className="font-script text-sm text-[#B8776A]">krásné nehty na dosah ruky</span>
           </span>
         </a>
 

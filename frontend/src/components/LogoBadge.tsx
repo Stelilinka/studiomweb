@@ -47,7 +47,7 @@ export default function LogoBadge({ className }: { className?: string }) {
         </p>
         <span className="mt-1 h-px w-10 bg-[#C79A7B]/60" aria-hidden />
         <p className="mt-1 font-script text-base leading-none text-[#C08272]">
-          tvé nehty — tvůj styl
+          krásné nehty na dosah ruky
         </p>
         <span className="mt-1 text-[#C79A7B]" aria-hidden>
           ♥
