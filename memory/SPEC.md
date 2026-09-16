@@ -23,11 +23,23 @@ Klasická manikúra 450 Kč/45 min · Gel lak 650 Kč/60 min · Modeláž nehtů
    rezervace se zobrazí formulář popisu designu → `POST /api/bookings/{id}/design`.
 2. **AI pipeline (background task):** Agent 1 **Claude** (emergentintegrations,
    model `claude-sonnet-4-5-20250929`) z popisu připraví anglický prompt pro
-   obrázek → Agent 2 **Execution Agent** (`OpenAIImageGeneration`, model
-   `gpt-image-1`) vygeneruje fotorealistický obrázek → uloží se do
-   `design_images` → pokud je kalendář připojený, doplní se odkaz do popisu
-   Google události. Frontend polluje `GET /api/bookings/{id}` (2,5 s) a
-   zobrazuje pipeline jako 3 kroky + finální obrázek.
+   obrázek → Agent 2 **Execution Agent** vygeneruje fotorealistický obrázek →
+   uloží se do `design_images` → pokud je kalendář připojený, doplní se odkaz
+   do popisu Google události. Frontend polluje `GET /api/bookings/{id}` (2,5 s)
+   a zobrazuje pipeline jako 3 kroky + finální obrázek.
+
+   **Klíče agentů (backend/.env, prioritní pořadí):**
+   - Agent 1 (Claude): `ANTHROPIC_API_KEY` zákaznice (ověřeno, funkční) →
+     fallback `EMERGENT_LLM_KEY`
+   - Agent 2 (obrázky): `GEMINI_API_KEY` (Vertex express `AQ.…`) — nano banana
+     (`gemini-2.5-flash-image`, Developer API režim) → Imagen
+     (`imagen-3.0-generate-002`, Vertex režim) → fallback Emergent engine
+     (`gpt-image-1`)
+   - **STAV:** Gemini klíč hlásí 429 QUOTA_EXHAUSTED (nutný billing/kvóta v
+     Google projektu), Imagen/Vertex 403 (Agent Platform API vypnutá) a Emergent
+     engine pro obrázky má vyčerpaný budget (429 budget_exceeded). Dokud se
+     neodblokují, pipeline selže s čitelnou chybou v UI a popis designu lze
+     odeslat znovu — rezervace i Claude prompt fungují normálně.
 3. **Google Kalendář:** OAuth majitelky (jednorázové připojení na /admin).
    Vytvoření rezervace → `create_event` v kalendáři `primary` (Evropa/Prague).
    Bez `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` v backend/.env běží systém v
