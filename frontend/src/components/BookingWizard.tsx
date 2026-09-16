@@ -123,11 +123,11 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
 
   return (
     <div
-      className="overflow-hidden rounded-3xl border border-[#EFEAE4] bg-white shadow-[0_30px_80px_-40px_rgba(28,25,23,0.25)]"
+      className="overflow-hidden rounded-3xl border border-[#EFDCD4] bg-white shadow-[0_30px_80px_-40px_rgba(28,25,23,0.25)]"
       data-testid="online-booking-wizard"
     >
       {/* indikátor kroků */}
-      <div className="border-b border-[#EFEAE4] bg-[#F5EFEB]/60 px-6 py-5 sm:px-10">
+      <div className="border-b border-[#EFDCD4] bg-[#F8EAE3]/60 px-6 py-5 sm:px-10">
         <div className="flex items-center justify-between gap-2" data-testid="booking-steps-indicator">
           {STEP_NAMES.map((label, i) => {
             const n = i + 1;
@@ -136,13 +136,13 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
               <div key={label} className="flex flex-1 items-center gap-2 last:flex-none">
                 <span
                   className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-medium transition-colors duration-300 ${
-                    reached ? "bg-[#9E4733] text-white" : "bg-white text-[#6E675F] border border-[#EFEAE4]"
+                    reached ? "bg-[#C08272] text-white" : "bg-white text-[#8A7972] border border-[#EFDCD4]"
                   }`}
                 >
                   {n}
                 </span>
-                <span className={`hidden text-sm sm:block ${reached ? "text-[#1C1917]" : "text-[#6E675F]"}`}>{label}</span>
-                {n < STEP_NAMES.length && <span className="mx-1 h-px flex-1 bg-[#EFEAE4]" aria-hidden />}
+                <span className={`hidden text-sm sm:block ${reached ? "text-[#5E4238]" : "text-[#8A7972]"}`}>{label}</span>
+                {n < STEP_NAMES.length && <span className="mx-1 h-px flex-1 bg-[#EFDCD4]" aria-hidden />}
               </div>
             );
           })}
@@ -153,10 +153,10 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
         {/* KROK 1 — služba */}
         {step === 1 && (
           <div data-testid="booking-step-service-selector">
-            <h3 className="font-heading text-2xl text-[#1C1917]">Vyberte službu</h3>
-            <p className="mt-1 text-sm text-[#6E675F]">Na co se dnes těšíte?</p>
+            <h3 className="font-heading text-2xl text-[#5E4238]">Vyberte službu</h3>
+            <p className="mt-1 text-sm text-[#8A7972]">Na co se dnes těšíte?</p>
             {servicesQuery.isError && (
-              <p className="mt-4 rounded-xl border border-[#B91C1C]/25 bg-[#B91C1C]/5 p-4 text-sm text-[#B91C1C]">
+              <p className="mt-4 rounded-xl border border-[#B4544A]/25 bg-[#B4544A]/5 p-4 text-sm text-[#B4544A]">
                 Ceník se nepodařilo načíst. Obnovte prosím stránku nebo to zkuste za chvíli.
               </p>
             )}
@@ -170,17 +170,17 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
                     data-testid={`service-option-${s.id}`}
                     onClick={() => setServiceId(s.id)}
                     className={`rounded-2xl border p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(28,25,23,0.4)] ${
-                      selected ? "border-[#9E4733] ring-1 ring-[#9E4733]" : "border-[#EFEAE4] bg-white"
+                      selected ? "border-[#C08272] ring-1 ring-[#C08272]" : "border-[#EFDCD4] bg-white"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium text-[#1C1917]">{s.name}</span>
+                      <span className="font-medium text-[#5E4238]">{s.name}</span>
                       <Badge variant="secondary">{s.tag}</Badge>
                     </div>
-                    <p className="mt-1 text-xs text-[#6E675F]">{s.description}</p>
-                    <p className="mt-2 font-heading text-lg text-[#9E4733]">
+                    <p className="mt-1 text-xs text-[#8A7972]">{s.description}</p>
+                    <p className="mt-2 font-heading text-lg text-[#C08272]">
                       {s.price}
-                      <span className="ml-2 text-xs text-[#6E675F]">· {s.duration_min} min</span>
+                      <span className="ml-2 text-xs text-[#8A7972]">· {s.duration_min} min</span>
                     </p>
                   </button>
                 );
@@ -198,9 +198,9 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
         {step === 2 && (
           <div className="grid gap-8 lg:grid-cols-[auto_1fr]" data-testid="booking-step-date-picker">
             <div>
-              <h3 className="font-heading text-2xl text-[#1C1917]">Kdy vám to přijde vhod?</h3>
-              <p className="mt-1 text-sm text-[#6E675F]">Vyberte datum — neděle je u nás volná.</p>
-              <div className="mt-4 rounded-2xl border border-[#EFEAE4] p-3">
+              <h3 className="font-heading text-2xl text-[#5E4238]">Kdy vám to přijde vhod?</h3>
+              <p className="mt-1 text-sm text-[#8A7972]">Vyberte datum — neděle je u nás volná.</p>
+              <div className="mt-4 rounded-2xl border border-[#EFDCD4] p-3">
                 <Calendar
                   mode="single"
                   selected={date}
@@ -214,20 +214,20 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
               </div>
             </div>
             <div data-testid="booking-step-time-slot">
-              <p className="flex items-center gap-2 text-sm font-medium text-[#1C1917]">
-                <Clock className="size-4 text-[#9E4733]" aria-hidden />
+              <p className="flex items-center gap-2 text-sm font-medium text-[#5E4238]">
+                <Clock className="size-4 text-[#C08272]" aria-hidden />
                 Volné časy{date ? ` — ${format(date, "d. MMMM", { locale: cs })}` : ""}
               </p>
-              {!date && <p className="mt-4 text-sm text-[#6E675F]">Nejdřív vyberte datum v kalendáři.</p>}
+              {!date && <p className="mt-4 text-sm text-[#8A7972]">Nejdřív vyberte datum v kalendáři.</p>}
               {date && availabilityQuery.isPending && (
                 <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
                   {Array.from({ length: 10 }).map((_, i) => (
-                    <div key={i} className="h-10 animate-pulse rounded-xl bg-[#F5EFEB]" />
+                    <div key={i} className="h-10 animate-pulse rounded-xl bg-[#F8EAE3]" />
                   ))}
                 </div>
               )}
               {date && availability?.closed && (
-                <p className="mt-4 rounded-xl border border-[#B45309]/25 bg-[#F5EFEB] p-4 text-sm text-[#78350F]">
+                <p className="mt-4 rounded-xl border border-[#C79A7B]/25 bg-[#F8EAE3] p-4 text-sm text-[#6B4F45]">
                   {availability.message}
                 </p>
               )}
@@ -242,8 +242,8 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
                       onClick={() => setTime(slot.time)}
                       className={`rounded-xl border px-2 py-2.5 text-sm transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-35 ${
                         time === slot.time
-                          ? "border-[#9E4733] bg-[#9E4733] text-white"
-                          : "border-[#EFEAE4] bg-white text-[#1C1917] hover:border-[#9E4733]/50"
+                          ? "border-[#C08272] bg-[#C08272] text-white"
+                          : "border-[#EFDCD4] bg-white text-[#5E4238] hover:border-[#C08272]/50"
                       }`}
                     >
                       {slot.time}
@@ -252,7 +252,7 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
                 </div>
               )}
               {date && availability && !availability.closed && (
-                <p className="mt-3 text-xs text-[#6E675F]">Šedé časy už jsou bohužel obsazené.</p>
+                <p className="mt-3 text-xs text-[#8A7972]">Šedé časy už jsou bohužel obsazené.</p>
               )}
               <div className="mt-6 flex items-center justify-between">
                 <Button variant="ghost" onClick={() => setStep(1)} data-testid="wizard-back-to-service-button">
@@ -269,14 +269,14 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
         {/* KROK 3 — kontakt */}
         {step === 3 && (
           <div data-testid="booking-step-client-form">
-            <h3 className="font-heading text-2xl text-[#1C1917]">Na vědomí vám to dáme</h3>
-            <p className="mt-1 text-sm text-[#6E675F]">Zadejte kontaktní údaje — potvrzení vám připravíme k termínu.</p>
+            <h3 className="font-heading text-2xl text-[#5E4238]">Na vědomí vám to dáme</h3>
+            <p className="mt-1 text-sm text-[#8A7972]">Zadejte kontaktní údaje — potvrzení vám připravíme k termínu.</p>
             {selectedService && date && (
-              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl bg-[#F5EFEB] px-4 py-3 text-sm text-[#57534E]">
-                <span className="font-medium text-[#1C1917]">{selectedService.name}</span>
+              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl bg-[#F8EAE3] px-4 py-3 text-sm text-[#6B4F45]">
+                <span className="font-medium text-[#5E4238]">{selectedService.name}</span>
                 <span>{formatCzechDate(dateStr)}</span>
                 <span>{time}</span>
-                <span className="ml-auto font-heading text-base text-[#9E4733]">{selectedService.price}</span>
+                <span className="ml-auto font-heading text-base text-[#C08272]">{selectedService.price}</span>
               </div>
             )}
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -332,19 +332,19 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
         {step === 4 && (
           <div className="space-y-6">
             <div
-              className="rounded-2xl border border-[#15803D]/30 bg-[#15803D]/5 p-5"
+              className="rounded-2xl border border-[#7E8C78]/30 bg-[#7E8C78]/5 p-5"
               data-testid="booking-success-confirmation"
             >
               <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 size-5 text-[#15803D]" aria-hidden />
+                <CheckCircle2 className="mt-0.5 size-5 text-[#7E8C78]" aria-hidden />
                 <div>
-                  <h3 className="font-heading text-xl text-[#1C1917]">
+                  <h3 className="font-heading text-xl text-[#5E4238]">
                     Rezervace potvrzena{booking ? ` — ${formatCzechDate(booking.date)} v ${booking.time}` : ""}
                   </h3>
-                  <p className="mt-1 text-sm text-[#57534E]">
+                  <p className="mt-1 text-sm text-[#6B4F45]">
                     Těšíme se na vás, {booking?.name ?? name}! {booking?.service_name} ({booking?.service_price}).
                   </p>
-                  <p className="mt-2 text-sm text-[#57534E]">
+                  <p className="mt-2 text-sm text-[#6B4F45]">
                     {booking?.calendar_synced
                       ? "Termín je zapsaný v Google Kalendáři studia — vše připravené na jednom místě."
                       : "Termín máme uložený v systému studia; do Google Kalendáře ho majitelka uvidí hned po připojení kalendáře."}
@@ -354,12 +354,12 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
             </div>
 
             {!showPipeline && (
-              <div className="rounded-2xl border border-[#EFEAE4] bg-[#FAF7F2]/70 p-5" data-testid="design-description-form">
-                <p className="flex items-center gap-2 font-heading text-lg text-[#1C1917]">
-                  <Sparkles className="size-4 text-[#9E4733]" aria-hidden />
+              <div className="rounded-2xl border border-[#EFDCD4] bg-[#FAF3EE]/70 p-5" data-testid="design-description-form">
+                <p className="flex items-center gap-2 font-heading text-lg text-[#5E4238]">
+                  <Sparkles className="size-4 text-[#C08272]" aria-hidden />
                   Jaké nehty si vysníváte?
                 </p>
-                <p className="mt-1 text-sm text-[#6E675F]">
+                <p className="mt-1 text-sm text-[#8A7972]">
                   Popište barvy, tvar, délku i efekt — Claude z popisu připraví přesné zadání a Execution Agent
                   vygeneruje fotorealistický náhled přímo k vašemu termínu.
                 </p>
@@ -389,7 +389,7 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
             {showPipeline && booking && <AiPipeline booking={booking} />}
 
             {!pipelineRunning && booking?.pipeline_status === "done" && (
-              <p className="rounded-2xl bg-[#F5EFEB] p-4 text-sm text-[#57534E]" data-testid="pipeline-done-note">
+              <p className="rounded-2xl bg-[#F8EAE3] p-4 text-sm text-[#6B4F45]" data-testid="pipeline-done-note">
                 Návrh je hotový a uložený u vaší rezervace. Paní M. ho na místě přesně zopakuje — můžete klidně
                 zavřít počítač a těšit se.
               </p>

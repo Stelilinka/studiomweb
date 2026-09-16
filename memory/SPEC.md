@@ -57,15 +57,25 @@ Klasická manikúra 450 Kč/45 min · Gel lak 650 Kč/60 min · Modeláž nehtů
 - `GET /api/calendar/status`, `GET /api/oauth/calendar/login`, `GET /api/oauth/calendar/callback`, `POST /api/calendar/disconnect`
 
 ## Frontend
-- `/` — hero (Krása v každém detailu), bento ceník, AI Studio (interaktivní
-  SVG NailCanvas: tvar/délka/finiš), filozofie, rezervační wizard, recenze, CTA, patička
-- `/admin` — tabulka rezervací, změna stavu, detail-výkres s promptem a obrázkem,
+- `/` — hero fotokoláž ve stylu předlohy (fotka vlevo + centrální claim STUDIO M
+  s podpisem „tvé nehty — tvůj styl“ + 4 ikonové benefity + box online objednání
+  + fotka vpravo), kulaté logo studia (SVG), MENU STUDIA (5 akvarelových karet:
+  Ceník / Ukázky / Recenze / Objednání / Akce), SLUŽBY A CENY (fotokarty
+  s tlačítky „PODROBNĚJI“ → předvybere službu ve wizardu), UKÁZKY PRACÍ
+  (galerie 4 fotek), AI Studio (interaktivní SVG NailCanvas), rezervační
+  wizard, RECENZE KLIENTEK, AKCE A SLEVY, CTA pás, patička
+- `/admin` — tabulka rezervací, změna stavu, detail s promptem a obrázkem,
   stav/připojení Google Kalendáře
-- Fonts: Playfair Display Variable (nadpisy) + DM Sans Variable (text) +
-  JetBrains Mono Variable (prompt), vše přes @fontsource
-- Palette: #FAF7F2 / #1C1917 / akcent #9E4733 + champagne #C49A6C
-- Žádné externí obrázky/fotobanky — jen SVG/CSS; jediné skutečné obrázky jsou
-  AI-generované návrhy z pipeline
+- Fonts: Playfair Display Variable (nadpisy, wide tracking uppercase) + DM Sans
+  Variable (text) + Great Vibes (podpis/script) + JetBrains Mono (prompt)
+- Paleta podle předlohy: krém #FAF3EE, pudrová #F5DDD8 / #E9B9AE, rose
+  #C08272 / #D99A8C, šalvějová #8B9A85 / #A9B5A3, rose gold #C79A7B,
+  text #4A3B34 / #5E4238
+- Fotografie: `src/lib/photos.ts` — **výhradně fotky nehtů / modeláže /
+  manikúry v jemných nude a pudrových tónech** (Unsplash/Pexels). Žádné
+  lahvičky, pedikúra ani jiná témata; ostatní grafika (logo, menu karty,
+  akvarelové textury, NailCanvas) je čisté CSS/SVG. Jediné dynamické obrázky
+  jsou AI-generované návrhy z pipeline
 
 ## Auth
 Žádná — admin stránka je otevřená (demo). Kalendář je chráněn OAuth Googlem.

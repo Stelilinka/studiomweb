@@ -1,19 +1,19 @@
-// SiteHeader — skleněná lepkavá navigace s monogramem, kotvami a CTA.
+// SiteHeader — jemná lepkavá navigace v pudrové paletě předlohy.
 
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ANCHORS = [
-  { href: "#sluzby", label: "Služby" },
-  { href: "#ai-studio", label: "AI Studio" },
-  { href: "#filozofie", label: "O nás" },
+  { href: "#sluzby", label: "Ceník" },
+  { href: "#galerie", label: "Ukázky" },
   { href: "#recenze", label: "Recenze" },
+  { href: "#akce", label: "Akce" },
 ];
 
 export default function SiteHeader() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-[#E8E1D7]/70 bg-[#FAF7F2]/85 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-[#EFDCD4] bg-[#FAF3EE]/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <a
           href="#hero"
@@ -21,12 +21,14 @@ export default function SiteHeader() {
           className="flex items-center gap-2.5"
           aria-label="Studio M — domovská stránka"
         >
-          <span className="flex size-9 items-center justify-center rounded-full bg-[#1C1917] font-heading text-lg font-semibold text-[#F5D0C5]">
-            M
+          <span className="flex size-9 items-center justify-center rounded-full border border-[#E9B9AE] bg-gradient-to-br from-[#FBF1EC] to-[#EFD6C9] font-heading text-base text-[#6B4F45]">
+            SM
           </span>
           <span className="flex flex-col leading-none">
-            <span className="font-heading text-lg tracking-tight text-[#1C1917]">Studio M</span>
-            <span className="text-[11px] tracking-[0.18em] text-[#6E675F] uppercase">Nail ateliér</span>
+            <span className="font-heading text-base tracking-[0.18em] text-[#5E4238] uppercase">
+              Studio M
+            </span>
+            <span className="font-script text-sm text-[#B8776A]">tvé nehty — tvůj styl</span>
           </span>
         </a>
 
@@ -35,7 +37,7 @@ export default function SiteHeader() {
             <a
               key={a.href}
               href={a.href}
-              className="text-sm text-[#57534E] transition-colors duration-300 hover:text-[#9E4733]"
+              className="text-[11px] tracking-[0.16em] text-[#8A7972] uppercase transition-colors duration-300 hover:text-[#C08272]"
             >
               {a.label}
             </a>
@@ -46,15 +48,16 @@ export default function SiteHeader() {
           <Link
             to="/admin"
             data-testid="nav-admin-portal-button"
-            className="hidden text-sm text-[#6E675F] transition-colors duration-300 hover:text-[#9E4733] sm:block"
+            className="hidden text-[11px] tracking-[0.16em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272] sm:block"
           >
             Správa
           </Link>
           <Button
+            className="rounded-full bg-[#8B9A85] text-white hover:bg-[#7E8C78]"
             render={
               <a href="#rezervace" data-testid="nav-book-appointment-button">
                 <Sparkles className="size-4" aria-hidden />
-                Rezervovat termín
+                Objednat se
               </a>
             }
           />

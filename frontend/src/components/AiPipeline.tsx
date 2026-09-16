@@ -54,19 +54,19 @@ export function AiPipeline({ booking }: { booking: Booking }) {
             data-testid={`ai-pipeline-step-${step.key}`}
             className={`flex items-start gap-3 rounded-2xl border p-4 transition-colors duration-300 ${
               isActive
-                ? "border-[#9E4733]/40 bg-[#EADCD5]/40"
+                ? "border-[#C08272]/40 bg-[#F3E0D8]/40"
                 : isDone
-                  ? "border-[#15803D]/25 bg-[#15803D]/5"
-                  : "border-[#EFEAE4] bg-white/60"
+                  ? "border-[#7E8C78]/25 bg-[#7E8C78]/5"
+                  : "border-[#EFDCD4] bg-white/60"
             }`}
           >
             <span
               className={`flex size-9 shrink-0 items-center justify-center rounded-full ${
                 isActive
-                  ? "bg-[#9E4733] text-white"
+                  ? "bg-[#C08272] text-white"
                   : isDone
-                    ? "bg-[#15803D] text-white"
-                    : "bg-[#F5EFEB] text-[#6E675F]"
+                    ? "bg-[#7E8C78] text-white"
+                    : "bg-[#F8EAE3] text-[#8A7972]"
               }`}
             >
               {isActive ? (
@@ -79,11 +79,11 @@ export function AiPipeline({ booking }: { booking: Booking }) {
             </span>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="font-heading text-base text-[#1C1917]">{step.title}</p>
+                <p className="font-heading text-base text-[#5E4238]">{step.title}</p>
                 {isDone && <Badge variant="secondary">Hotovo</Badge>}
-                {isActive && <Badge className="bg-[#9E4733] text-white">Pracuji…</Badge>}
+                {isActive && <Badge className="bg-[#C08272] text-white">Pracuji…</Badge>}
               </div>
-              <p className="mt-1 text-sm leading-relaxed text-[#6E675F]">
+              <p className="mt-1 text-sm leading-relaxed text-[#8A7972]">
                 {isActive ? step.active : isDone ? step.done : step.pending}
               </p>
               {step.key === "prompt" && booking.design_prompt && (
@@ -93,7 +93,7 @@ export function AiPipeline({ booking }: { booking: Booking }) {
                   </Button>
                   {showPrompt && (
                     <p
-                      className="mt-2 rounded-xl bg-[#1C1917] p-3 font-mono text-xs leading-relaxed text-[#D6D3D1]"
+                      className="mt-2 rounded-xl bg-[#5E4238] p-3 font-mono text-xs leading-relaxed text-[#8A7972]"
                       data-testid="design-prompt-display"
                     >
                       {booking.design_prompt}
@@ -107,15 +107,15 @@ export function AiPipeline({ booking }: { booking: Booking }) {
       })}
 
       {failed && (
-        <div className="rounded-2xl border border-[#B91C1C]/30 bg-[#B91C1C]/5 p-4" data-testid="ai-pipeline-error">
-          <div className="flex items-center gap-2 text-[#B91C1C]">
+        <div className="rounded-2xl border border-[#B4544A]/30 bg-[#B4544A]/5 p-4" data-testid="ai-pipeline-error">
+          <div className="flex items-center gap-2 text-[#B4544A]">
             <TriangleAlert className="size-4" aria-hidden />
             <p className="font-medium">Zpracování návrhu bohužel selhalo.</p>
           </div>
           {booking.pipeline_error && (
-            <p className="mt-1 break-words text-xs text-[#6E675F]">{booking.pipeline_error}</p>
+            <p className="mt-1 break-words text-xs text-[#8A7972]">{booking.pipeline_error}</p>
           )}
-          <p className="mt-2 text-sm text-[#6E675F]">
+          <p className="mt-2 text-sm text-[#8A7972]">
             Klidně to zkuste znovu — popište design a odešlete jej ještě jednou.
           </p>
         </div>
@@ -127,9 +127,9 @@ export function AiPipeline({ booking }: { booking: Booking }) {
             src={`/api/bookings/${booking.id}/design-image?v=${encodeURIComponent(booking.updated_at)}`}
             alt="AI návrh designu nehtů podle vašeho popisu"
             data-testid="design-image-preview"
-            className="w-full rounded-2xl border border-[#EFEAE4] shadow-[0_18px_50px_-24px_rgba(28,25,23,0.35)]"
+            className="w-full rounded-2xl border border-[#EFDCD4] shadow-[0_18px_50px_-24px_rgba(28,25,23,0.35)]"
           />
-          <figcaption className="mt-2 text-center text-xs tracking-[0.14em] text-[#6E675F] uppercase">
+          <figcaption className="mt-2 text-center text-xs tracking-[0.14em] text-[#8A7972] uppercase">
             Návrh vytvořený agenty Studio M
           </figcaption>
         </figure>
