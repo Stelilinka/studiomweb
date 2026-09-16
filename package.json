@@ -6,14 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "scrape-assets": "node scripts/scrape-assets.js"
   },
   "dependencies": {
     "next": "13.5.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "better-sqlite3": "8.0.1",
-    "@google-cloud/aiplatform": "^1.0.0"
+    "@google-cloud/aiplatform": "^1.0.0",
+    "cheerio": "1.0.0-rc.12"
   },
   "devDependencies": {
     "autoprefixer": "10.4.14",
