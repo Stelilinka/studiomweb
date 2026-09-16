@@ -1,0 +1,139 @@
+// AiPipeline — vizualizace práce AI agentů nad rezervací.
+// Agent 1 (Claude) připraví prompt → Agent 2 (Execution) vygeneruje obrázek → zápis do kalendáře.
+
+import { useState } from "react";
+import { CalendarCheck, Check, Image as ImageIcon, Loader2, Sparkles, TriangleAlert } from "lucide-react";
+import type { Booking } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+const STEPS = [
+  {
+    key: "prompt" as const,
+    icon: Sparkles,
+    title: "Agent 1 · Claude",
+    pending: "Claude přečte váš popis a připraví přesné zadání pro obrázek.",
+    active: "Claude přeměňuje váš popis na precizní prompt pro generování obrázku…",
+    done: "Prompt připraven — popis jsme přeložili do přesného zadání pro obrázek.",
+  },
+  {
+    key: "image" as const,
+    icon: ImageIcon,
+    title: "Agent 2 · Execution Agent",
+    pending: "Generátor obrázků vytvoří fotorealistickou ukázku vašich nehtů.",
+    active: "Generuje se fotorealistický návrh — obvykle to trvá půl minuty…",
+    done: "Fotorealistický návrh vašich nehtů je hotový.",
+  },
+  {
+    key: "calendar" as const,
+    icon: CalendarCheck,
+    title: "Zápis do kalendáře",
+    pending: "Návrh i popis putují k vašemu termínu v Google Kalendáři.",
+    active: "Ukládáme návrh k vaší rezervaci v kalendáři…",
+    done: "Návrh je uložený u vašeho termínu — paní M. ho na místě hned najde.",
+  },
+];
+
+const ORDER = ["none", "prompt", "image", "calendar", "done"] as const;
+
+export function AiPipeline({ booking }: { booking: Booking }) {
+  const [showPrompt, setShowPrompt] = useState(false);
+  const current = ORDER.indexOf(booking.pipeline_status as (typeof ORDER)[number]);
+  const failed = booking.pipeline_status === "failed";
+
+  return (
+    <div className="space-y-3" data-testid="ai-pipeline">
+      {STEPS.map((step, i) => {
+        const state = failed ? "pending" : i < current - 1 ? "done" : i === current - 1 ? "active" : "pending";
+        const Icon = step.icon;
+        const isActive = state === "active";
+        const isDone = state === "done";
+        return (
+          <div
+            key={step.key}
+            data-testid={`ai-pipeline-step-${step.key}`}
+            className={`flex items-start gap-3 rounded-2xl border p-4 transition-colors duration-300 ${
+              isActive
+                ? "border-[#9E4733]/40 bg-[#EADCD5]/40"
+                : isDone
+                  ? "border-[#15803D]/25 bg-[#15803D]/5"
+                  : "border-[#EFEAE4] bg-white/60"
+            }`}
+          >
+            <span
+              className={`flex size-9 shrink-0 items-center justify-center rounded-full ${
+                isActive
+                  ? "bg-[#9E4733] text-white"
+                  : isDone
+                    ? "bg-[#15803D] text-white"
+                    : "bg-[#F5EFEB] text-[#6E675F]"
+              }`}
+            >
+              {isActive ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden />
+              ) : isDone ? (
+                <Check className="size-4" aria-hidden />
+              ) : (
+                <Icon className="size-4" aria-hidden />
+              )}
+            </span>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-heading text-base text-[#1C1917]">{step.title}</p>
+                {isDone && <Badge variant="secondary">Hotovo</Badge>}
+                {isActive && <Badge className="bg-[#9E4733] text-white">Pracuji…</Badge>}
+              </div>
+              <p className="mt-1 text-sm leading-relaxed text-[#6E675F]">
+                {isActive ? step.active : isDone ? step.done : step.pending}
+              </p>
+              {step.key === "prompt" && booking.design_prompt && (
+                <div className="mt-2">
+                  <Button variant="ghost" size="xs" onClick={() => setShowPrompt((v) => !v)} data-testid="toggle-design-prompt-button">
+                    {showPrompt ? "Skrýt prompt" : "Zobrazit prompt agenta Claude"}
+                  </Button>
+                  {showPrompt && (
+                    <p
+                      className="mt-2 rounded-xl bg-[#1C1917] p-3 font-mono text-xs leading-relaxed text-[#D6D3D1]"
+                      data-testid="design-prompt-display"
+                    >
+                      {booking.design_prompt}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+
+      {failed && (
+        <div className="rounded-2xl border border-[#B91C1C]/30 bg-[#B91C1C]/5 p-4" data-testid="ai-pipeline-error">
+          <div className="flex items-center gap-2 text-[#B91C1C]">
+            <TriangleAlert className="size-4" aria-hidden />
+            <p className="font-medium">Zpracování návrhu bohužel selhalo.</p>
+          </div>
+          {booking.pipeline_error && (
+            <p className="mt-1 break-words text-xs text-[#6E675F]">{booking.pipeline_error}</p>
+          )}
+          <p className="mt-2 text-sm text-[#6E675F]">
+            Klidně to zkuste znovu — popište design a odešlete jej ještě jednou.
+          </p>
+        </div>
+      )}
+
+      {booking.has_design_image && (
+        <figure className="pt-1" data-testid="design-image-figure">
+          <img
+            src={`/api/bookings/${booking.id}/design-image?v=${encodeURIComponent(booking.updated_at)}`}
+            alt="AI návrh designu nehtů podle vašeho popisu"
+            data-testid="design-image-preview"
+            className="w-full rounded-2xl border border-[#EFEAE4] shadow-[0_18px_50px_-24px_rgba(28,25,23,0.35)]"
+          />
+          <figcaption className="mt-2 text-center text-xs tracking-[0.14em] text-[#6E675F] uppercase">
+            Návrh vytvořený agenty Studio M
+          </figcaption>
+        </figure>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,291 @@
+{
+  "theme": "light_with_rich_warm_depth",
+  "project_overview": {
+    "brand_name": "Studio M",
+    "tagline": "Krása v každém detailu",
+    "subtitle": "Vaše nehty — Váš osobní styl",
+    "language": "cs",
+    "design_archetype": "Luxury Organic Beauty & Architectural Editorial",
+    "concept": "A bespoke, sensory nail atelier website fusing editorial Swiss typography, warm cashmere & clay tones, delicate SVG art lines, soft glow mesh backgrounds, and an interactive multi-agent AI design generator + Google Calendar reservation system.",
+    "core_aesthetic_rules": [
+      "No generic purple-blue AI gradients. Use warm cashmere, rose clay, champagne gold, deep espresso noir, and delicate sage.",
+      "No stock photos from photo banks or placeholder image generators. All visual textures are crafted via CSS, SVG vector art, layered ambient gradients, and real AI-pipeline generated nail-art renders upon booking.",
+      "Typography is the primary emotional carrier: 'Playfair Display' for editorial couture headings paired with 'DM Sans' for ultra-clean, readable modern body copy.",
+      "Asymmetric bento compositions with deep generous spacing, crisp 1px borders, tactile pill triggers, and subtle micro-interactions."
+    ]
+  },
+  "colors": {
+    "palette_name": "Cashmere, Rose Clay & Deep Espresso",
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#FAF7F2",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#6E675F",
+        "roles": {
+          "link": "#A8533B",
+          "accent_highlight": "#B45309",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#78716C",
+        "roles": {
+          "border": "#EFEAE4",
+          "badge_bg": "#F5EFEB",
+          "badge_text": "#78350F"
+        }
+      },
+      {
+        "name": "panel_secondary",
+        "kind": "solid",
+        "bg": "#F5EFEB",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E"
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#1C1917",
+        "on_bg": "#FAF7F2",
+        "on_bg_muted": "#D6D3D1",
+        "roles": {
+          "link": "#F5D0C5",
+          "accent_gold": "#D4AF37",
+          "border": "#292524"
+        }
+      },
+      {
+        "name": "hero",
+        "kind": "gradient",
+        "contrast_against": "#F2EBE3",
+        "guarantee": "soft organic radial glow: radial-gradient(circle at 80% 20%, #F5DED6 0%, #FAF7F2 65%, #F4EBE1 100%)",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E",
+        "roles": {
+          "link": "#A8533B",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "glass_header",
+        "kind": "glass",
+        "contrast_against": "#FAF7F2",
+        "guarantee": "backdrop-blur-xl bg-[#FAF7F2]/80 border-b border-[#E7DFD5]/60",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E"
+      },
+      {
+        "name": "accent_badge",
+        "kind": "solid",
+        "bg": "#EADCD5",
+        "on_bg": "#5C2E25",
+        "on_bg_muted": "#7C453A"
+      },
+      {
+        "name": "interactive_card_hover",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E"
+      }
+    ],
+    "accent": "#9E4733",
+    "on_accent": "#FFFFFF",
+    "accent_hover": "#843927",
+    "secondary_accent": "#C49A6C",
+    "on_secondary_accent": "#1C1917"
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Playfair Display Variable, serif",
+      "body": "DM Sans Variable, sans-serif",
+      "mono": "JetBrains Mono Variable, monospace"
+    },
+    "fontsource_imports": [
+      "@import \"@fontsource-variable/playfair-display\";",
+      "@import \"@fontsource-variable/dm-sans\";",
+      "@import \"@fontsource-variable/jetbrains-mono\";"
+    ],
+    "scale_px": {
+      "display": 56,
+      "h1": 44,
+      "h2": 32,
+      "h3": 22,
+      "h4": 18,
+      "body": 16,
+      "caption": 14
+    },
+    "letter_spacing": {
+      "hero_display": "-0.03em",
+      "section_heading": "-0.02em",
+      "overline": "0.18em",
+      "body": "0.01em"
+    }
+  },
+  "entry_surfaces": {
+    "/": "split asymmetric editorial hero — left: brand aura, micro-badge, strong typography, CTA cluster & fast stats; right: interactive SVG nail silhouette with live palette studio preview",
+    "/admin": "dense functional command bar top, live Google Calendar integration status pill, interactive reservation queue table with AI design detail drawer"
+  },
+  "layouts_and_sections": {
+    "navigation": {
+      "style": "Crystal glass sticky top header with blur, brand monogram logo, section anchor links (Služby, Inspirace, O nás, Recenze, Rezervace), Admin switch & prominent 'Rezervovat termín' button",
+      "classes": "sticky top-0 z-50 backdrop-blur-xl bg-[#FAF7F2]/85 border-b border-[#E8E1D7] transition-all px-6 py-4"
+    },
+    "sections_order": [
+      {
+        "id": "hero",
+        "title_cs": "Krása v každém detailu",
+        "layout": "Asymmetric 12-column grid (7 cols left content + 5 cols right interactive SVG art canvas)"
+      },
+      {
+        "id": "sluzby",
+        "title_cs": "Služby & Ceník",
+        "layout": "Bento showcase with distinct service tiers (Klasická manikúra, Gel lak, Modeláž nehtů, Nail art, Spa Pedikúra), price badges, time indicators, and instant 'Vybrat službu' booking trigger"
+      },
+      {
+        "id": "ai-studio",
+        "title_cs": "AI Studio Nehtového Designu",
+        "layout": "Interactive bespoke nail design visualizer where client customizes shape (Mandle, Oval, Stiletto, Square), length, base finish (Glazed Donut, Velvet Matte, Rose Gold Chrome, French Ombré), and sees SVG generative preview"
+      },
+      {
+        "id": "hodnoty",
+        "title_cs": "Naše Filozofie & Standardy",
+        "layout": "3-column architectural pillar cards: 1. Sterilita a bezpečnost (chirurgická úroveň), 2. Prémiové veganské gely bez toxinů, 3. Precizní péče na míru bez spěchu"
+      },
+      {
+        "id": "rezervace",
+        "title_cs": "Online Rezervace & AI Pipeline",
+        "layout": "Full 4-step seamless booking wizard: Step 1 (Výběr služby) -> Step 2 (Výběr data a reálného času) -> Step 3 (Kontaktní údaje a popis vysněného designu) -> Step 4 (Potvrzení, zápis do Google Kalendáře a generování AI vizualizace nehtů přes Claude/Agent pipeline)"
+      },
+      {
+        "id": "recenze",
+        "title_cs": "Zkušenosti Našich Klientek",
+        "layout": "Curated quote mosaic featuring verified customer reviews with rating stars, service tags, and dates"
+      },
+      {
+        "id": "admin-portal",
+        "title_cs": "Správa Rezervací (Admin)",
+        "layout": "Dedicated accessible tab/modal allowing salon manager to view all bookings, filter by status, toggle Google Calendar sync, and inspect generated nail designs"
+      },
+      {
+        "id": "footer",
+        "title_cs": "Patička & Kontakt",
+        "layout": "Deep espresso footer with studio address (Vinohradská, Praha), opening hours, phone, Instagram, and rapid contact form"
+      }
+    ]
+  },
+  "services_data": [
+    {
+      "id": "klasicka-manikura",
+      "name": "Klasická manikúra",
+      "price": "450 Kč",
+      "duration": "45 min",
+      "tag": "Základní péče",
+      "description": "Kompletní ošetření nehtové kůžičky, zapilování do tvaru, vyživující lázeň a záverečný regenerační olejíček."
+    },
+    {
+      "id": "gel-lak",
+      "name": "Gel lak",
+      "price": "650 Kč",
+      "duration": "60 min",
+      "tag": "Nejpopulárnější",
+      "description": "Profesionální aplikace vysoce odolného šetrného gel laku s výdrží 3–4 týdny a zrcadlovým leskem."
+    },
+    {
+      "id": "modelaz-nehtu",
+      "name": "Modeláž nehtů",
+      "price": "950 Kč",
+      "duration": "120 min",
+      "tag": "Prodloužení & Zpevnění",
+      "description": "Prodloužení na šablonky prémiovým polygelem s precizním modelováním C-oblouku a maximální pevností."
+    },
+    {
+      "id": "nail-art",
+      "name": "Bespoke Nail Art",
+      "price": "od 100 Kč",
+      "duration": "+30 min",
+      "tag": "Umělecký detail",
+      "description": "Ručně malované motivy, chromové pigmenty, minimalistické linky, ombré přechody a kamínky Swarovski."
+    },
+    {
+      "id": "pedikura",
+      "name": "Spa Pedikúra",
+      "price": "750 Kč",
+      "duration": "60 min",
+      "tag": "Relaxace",
+      "description": "Komplexní přístrojová i mokrá pedikúra, peeling s himálajskou solí, úprava nehtů a uvolňující masáž chodidel."
+    }
+  ],
+  "customer_reviews": [
+    {
+      "author": "Tereza K.",
+      "service": "Gel lak + Nail art",
+      "rating": 5,
+      "text": "Konečně nemusím nikam volat. Termín jsem měla vybraný za dvě minuty a nehty jsou pokaždé nádherné a drží přes měsíc bez jediného odštípnutí."
+    },
+    {
+      "author": "Karolína M.",
+      "service": "Modeláž nehtů",
+      "rating": 5,
+      "text": "Jemná práce, krásné a čisté prostředí a výsledek přesně podle mé představy. Líbí se mi možnost popsat si styl předem."
+    },
+    {
+      "author": "Michaela V.",
+      "service": "Klasická manikúra",
+      "rating": 5,
+      "text": "Líbí se mi, že hned vidím volné časy a můžu se objednat i večer z mobilu. Studio M je moje srdcová záležitost."
+    }
+  ],
+  "motion": {
+    "hover_transitions": "transition-all duration-300 ease-out",
+    "spring_physics": { "type": "spring", "stiffness": 300, "damping": 25 },
+    "scroll_entrance": "Fade in up with stagger 0.08s across grid items",
+    "micro_interactions": [
+      "Subtle 2px lift and soft shadow expansion on service cards",
+      "Interactive SVG nail reflection gleam on hover",
+      "Step progress bar smooth width animation on booking wizard"
+    ]
+  },
+  "accessibility": {
+    "wcag_level": "AA",
+    "min_contrast": "All text tokens strictly maintain >= 4.5:1 ratio against their background surfaces",
+    "keyboard_navigation": "Full focus-visible outlines on all triggers, modals, and date/slot buttons",
+    "screen_readers": "Descriptive aria-labels on time slot pickers, calendar days, and status badges"
+  },
+  "data_testids": {
+    "nav_brand": "nav-brand-logo",
+    "nav_book_btn": "nav-book-appointment-button",
+    "nav_admin_btn": "nav-admin-portal-button",
+    "hero_cta_book": "hero-cta-book-button",
+    "hero_cta_explore": "hero-cta-explore-services",
+    "service_card_prefix": "service-card-",
+    "service_book_btn_prefix": "service-select-btn-",
+    "booking_wizard": "online-booking-wizard",
+    "booking_step_service": "booking-step-service-selector",
+    "booking_step_date": "booking-step-date-picker",
+    "booking_step_slot": "booking-step-time-slot",
+    "booking_step_form": "booking-step-client-form",
+    "booking_submit_btn": "booking-submit-confirm-button",
+    "booking_ai_prompt_input": "booking-ai-design-description-input",
+    "booking_success_banner": "booking-success-confirmation",
+    "admin_reservations_table": "admin-reservations-table",
+    "admin_sync_status": "admin-gcal-sync-status"
+  },
+  "instructions_to_main_agent": [
+    "Frontend is in /app/frontend/src, backend in /app/backend.",
+    "Tailwind v4 tokens are in /app/frontend/src/index.css. Import Playfair Display & DM Sans fonts.",
+    "All copy, labels, placeholders, buttons, error messages and confirmation texts MUST be in natural, elegant Czech.",
+    "Implement the full booking flow: Service selection -> Date (interactive calendar) -> Time Slots (generated with available intervals) -> Contact form with AI design prompt -> Backend booking creation with MongoDB storage -> Simulated/Connected AI image generation preview -> Success modal with Google Calendar event simulation.",
+    "Implement the hidden/accessible Admin page (/admin or Admin tab) with full reservation list, status updating (Potvrzeno, Dokončeno, Zrušeno), and client design inspector.",
+    "Do NOT use external stock photo services. Use pure CSS, SVG illustrations of elegant hands/nails/bottles/sparkles, subtle noise textures, and live SVG nail customizers.",
+    "Ensure every interactive element has its required data-testid."
+  ]
+}
