@@ -35,11 +35,13 @@ Klasická manikúra 450 Kč/45 min · Gel lak 650 Kč/60 min · Modeláž nehtů
      (`gemini-2.5-flash-image`, Developer API režim) → Imagen
      (`imagen-3.0-generate-002`, Vertex režim) → fallback Emergent engine
      (`gpt-image-1`)
-   - **STAV:** Gemini klíč hlásí 429 QUOTA_EXHAUSTED (nutný billing/kvóta v
-     Google projektu), Imagen/Vertex 403 (Agent Platform API vypnutá) a Emergent
-     engine pro obrázky má vyčerpaný budget (429 budget_exceeded). Dokud se
-     neodblokují, pipeline selže s čitelnou chybou v UI a popis designu lze
-     odeslat znovu — rezervace i Claude prompt fungují normálně.
+   - **STAV:** vlastní Gemini klíč je stále blokovaný Googlem — nano banana hlásí
+     429 RESOURCE_EXHAUSTED (`limit: 0` pro free tier, nutný billing) a
+     Imagen/Vertex 403 SERVICE_DISABLED (nezapnutá Agent Platform API v projektu
+     604568447747). **Emergent engine po dobití kreditů funguje**, takže AI
+     náhledy nehtů jsou živé přes automatickou zálohu — ověřeno end-to-end
+     (1024×1024 PNG u rezervace vytvořené přes UI). Po odblokování Google kvóty
+     se začne používat vlastní klíč sám, bez zásahu do kódu.
 3. **Google Kalendář:** OAuth majitelky (jednorázové připojení na /admin).
    Vytvoření rezervace → `create_event` v kalendáři `primary` (Evropa/Prague).
    Bez `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` v backend/.env běží systém v
