@@ -2,7 +2,14 @@
 // Jen jemné nude a pudrové tóny, aby fotky ladily s paletou předlohy.
 // Žádné lahvičky, žádná pedikúra, žádná jiná témata.
 
+// Dodané firemní podklady klientky
+export const STUDIO_LOGO =
+  "https://customer-assets-v7afamib.emergentagent.net/job_czech-chat-buddy/artifacts/j0eu20jk_WhatsApp%20Image%202026-09-16%20at%2019.18.33.jpeg";
+
 export const NAIL_PHOTOS = {
+  // šalvějová francie se zlatými detaily — fotka od klientky
+  sageFrench:
+    "https://customer-assets-v7afamib.emergentagent.net/job_czech-chat-buddy/artifacts/eup86puw_Gemini_Generated_Image_wfxms1wfxms1wfxmnxnxnxn.webp",
   // hero koláž
   heroLeft:
     "https://images.unsplash.com/photo-1610992015762-45dca7fa3a85?crop=entropy&cs=srgb&fm=jpg&w=900&q=80&ixlib=rb-4.1.0",

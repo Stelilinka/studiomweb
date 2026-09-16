@@ -1,0 +1,96 @@
+{
+  "iteration": 2,
+  "summary": "8/8 UI-facing criteria covered with 8 passing browser checks (2 new: logo-badges-visible, homepage-loads-clean updated for hero collage; ai-studio check rewritten for NailPreview photo component); 3 backend test files (5 test cases) covering API-bearing criteria all pass. No bugs found.",
+  "passed": 11,
+  "failed": 0,
+  "flaky": 0,
+  "blocked": 0,
+  "test_error": 0,
+  "retest_needed": false,
+  "bugs": [],
+  "action_items": [],
+  "checks": [
+    {
+      "criterion": "Úvodní stránka se načte bez console errors a bez requestů se statusem >= 400; hero fotokoláž, nadpis STUDIO M, hero-cta-book-button i hero-secondary-wizard-button jsou vidět",
+      "name": "homepage-loads-clean",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "hero-photo-left/right visible with naturalWidth>0; h1 text 'STUDIO M' matched; hero-cta-book-button and hero-secondary-wizard-button visible; no response >=400 observed during load."
+    },
+    {
+      "criterion": "Nové logo studia se načítá a je vidět (studio-logo-badge v menu, footer-logo-badge v patičce)",
+      "name": "logo-badges-visible",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "studio-logo-badge and footer-logo-badge visible; studio-logo-badge-image and footer-logo-badge-image both have naturalWidth > 0."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services a zobrazuje fotokarty s tlačítkem PODROBNĚJI",
+      "name": "pricing-list-loads-services",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "5 service-card-<id> found for klasicka-manikura/gel-lak/modelaz-nehtu/nail-art/pedikura; each shows price with 'Kč'; each service-select-btn-<id> text uppercases to include 'PODROBNĚJI'."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services",
+      "name": "test_services_endpoint_returns_seeded_services",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "GET /api/services -> 200, returned 5 seeded services each with name/description/price(Kč)/duration_min."
+    },
+    {
+      "criterion": "Kliknutí na service-select-btn-<id> předvybere službu a průvodce přeskočí na krok 2 (Termín)",
+      "name": "service-select-jumps-to-step2",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "After clicking service-select-btn-*, booking-step-date-picker became visible and #rezervace scrolled into viewport (re-ran persisted check)."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce",
+      "name": "booking-e2e-flow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Selected service -> found open weekday with an enabled slot-button-* -> filled name/phone -> booking-success-confirmation became visible (re-ran persisted check)."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce",
+      "name": "test_create_booking_end_to_end / test_availability_closed_on_sunday",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "POST /api/bookings -> 200 with persisted booking (calendar_synced=false per spec deviation); duplicate slot POST -> 409; GET /api/availability on Sunday -> closed=true."
+    },
+    {
+      "criterion": "Chat asistentka Klára odpovídá",
+      "name": "chat-klara-answers-price",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "hero-cta-book-button opens chat-window; message 'Kolik stoji gel lak?' produced reply mentioning price in Kč (re-ran persisted check)."
+    },
+    {
+      "criterion": "Chat asistentka Klára odpovídá",
+      "name": "test_chat_returns_price_answer / test_chat_history_is_retrievable",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "POST /api/chat -> 200 non-empty reply string mentioning Kč; GET /api/chat/{session_id} -> turns array with >=2 entries."
+    },
+    {
+      "criterion": "AI studio — realistický fotonáhled reaguje na volby (finish-option-mat / shape-option-oval / length-option-3)",
+      "name": "ai-studio-preview-reacts-to-choices",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Clicking finish-option-mat, shape-option-oval, length-option-3 each changed the button's class attribute (active style toggled) and nail-preview-caption text changed across selections; active photo inside nail-preview has naturalWidth > 0."
+    },
+    {
+      "criterion": "Responzivita 390x844 — žádný horizontální scroll, hero CTA klikatelné, menu karty čitelné",
+      "name": "mobile-responsive-no-horizontal-scroll",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "At 390x844, document.scrollWidth (390) <= innerWidth (390) + 2; hero-cta-book-button visible/enabled; studio-menu-cards and menu-card-cenik visible."
+    }
+  ],
+  "notes": [
+    "Removed two artifacts that no longer map to the current acceptance matrix: old 'ai-studio-preview-options-toggle' (replaced by ai-studio-preview-reacts-to-choices which also validates NailPreview photo + caption reactivity) and 'gallery-photos-load-and-header-scrolls' (gallery/header scroll behavior is not in the current 8-item matrix).",
+    "spec_deviations honored: calendar_synced=false / calendar not configured is expected; NailCanvas was intentionally removed in favor of NailPreview photo component.",
+    "Cleaned stray .backup files from /app/.emergent/scripts/checks/ before finalizing."
+  ]
+}

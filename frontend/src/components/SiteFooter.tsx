@@ -9,7 +9,7 @@ export default function SiteFooter() {
     <footer className="border-t border-[#EFDCD4] bg-[#F3E4DC] text-[#5E4238]">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[0.7fr_1fr_1fr]">
         <div>
-          <LogoBadge className="w-40" />
+          <LogoBadge className="w-40" testId="footer-logo-badge" />
         </div>
 
         <div>

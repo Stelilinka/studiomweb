@@ -1,0 +1,95 @@
+{
+  "iteration": 1,
+  "summary": "8/8 UI-facing criteria covered with 8 passing browser checks; 3 backend test files (5 test cases) covering the API-bearing criteria all pass. No bugs found.",
+  "passed": 11,
+  "failed": 0,
+  "flaky": 0,
+  "blocked": 0,
+  "test_error": 0,
+  "retest_needed": false,
+  "bugs": [],
+  "action_items": [],
+  "checks": [
+    {
+      "criterion": "Úvodní stránka se načte bez chyb v konzoli a bez requestů se statusem >= 400",
+      "name": "homepage-loads-clean",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Hero visible with hero-cta-book-button, hero-secondary-wizard-button, and 'Ideáln' text; no response >=400 observed during load."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services a zobrazuje řádky služeb",
+      "name": "pricing-list-loads-services",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "service-card-* count >= 5, no services-error rendered."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services a zobrazuje řádky služeb",
+      "name": "test_services_endpoint_returns_seeded_services",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "GET /api/services -> 200, returned 5 seeded services (klasicka-manikura, gel-lak, modelaz-nehtu, nail-art, pedikura) each with name/description/price(Kč)/duration_min."
+    },
+    {
+      "criterion": "Kliknutí na service-select-btn-<id> předvybere službu a přeskočí na krok 2 (Termín)",
+      "name": "service-select-jumps-to-step2",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "After clicking service-select-btn-*, booking-step-date-picker became visible and #rezervace scrolled into viewport."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce",
+      "name": "booking-e2e-flow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Selected service -> found open weekday with an enabled slot-button-* -> filled name/phone -> booking-success-confirmation became visible."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce",
+      "name": "test_create_booking_end_to_end / test_availability_closed_on_sunday",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "POST /api/bookings -> 200 with persisted booking (calendar_synced=false as expected per spec deviation); GET /api/bookings/{id} confirms persistence; duplicate slot POST -> 409; GET /api/availability on a Sunday -> closed=true, all slots unavailable."
+    },
+    {
+      "criterion": "Chat asistentka Klára odpovídá",
+      "name": "chat-klara-answers-price",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "hero-cta-book-button opens chat-window; POST /api/chat for 'Kolik stoji gel lak?' returned 200 with reply 'Gel lak stojí 650 Kč...'; chat-bubble-assistant rendered."
+    },
+    {
+      "criterion": "Chat asistentka Klára odpovídá",
+      "name": "test_chat_returns_price_answer / test_chat_history_is_retrievable",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "POST /api/chat -> 200 non-empty reply string mentioning Kč; GET /api/chat/{session_id} -> turns array with >=2 entries."
+    },
+    {
+      "criterion": "AI studio náhled reaguje na volby",
+      "name": "ai-studio-preview-options-toggle",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Clicking an inactive shape-option-*, finish-option-*, length-option-* each changed the button's class (active style applied)."
+    },
+    {
+      "criterion": "Galerie a hlavička",
+      "name": "gallery-photos-load-and-header-scrolls",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "gallery-photo-1..4 img elements all had naturalWidth > 0; site-header backgroundColor changed from transparent after scrolling 1200px."
+    },
+    {
+      "criterion": "Responzivita 390x844",
+      "name": "mobile-responsive-no-horizontal-scroll",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "At 390x844, document.scrollWidth (390) <= window.innerWidth (390) + 2; hero-cta-book-button visible and enabled."
+    }
+  ],
+  "notes": [
+    "spec_deviations honored: calendar_synced=false / calendar not configured is expected, not a bug.",
+    "'neprázdným polem reply' in the criterion means a non-empty reply FIELD (Czech 'pole'=field), not an array — /api/chat returns reply as a string; verified accordingly."
+  ]
+}

@@ -1,57 +1,48 @@
-// LogoBadge — kulaté logo studia jako v předloze (monogram + větvička + podpis).
-// Čistě SVG/CSS, žádná fotka.
+// LogoBadge — oficiální logo studia (line-art monogram M · studio nails).
+// Obrázek je tónovaný do rose gold, kolem rotuje jemný prstenec a při hoveru
+// se logo nadechne. Bez fotobanky — jde o dodaný firemní podklad.
 
-export default function LogoBadge({ className }: { className?: string }) {
+import { STUDIO_LOGO } from "@/lib/photos";
+
+export default function LogoBadge({
+  className,
+  testId = "studio-logo-badge",
+}: {
+  className?: string;
+  testId?: string;
+}) {
   return (
     <div
-      className={`relative flex aspect-square items-center justify-center rounded-full border border-[#E9B9AE]/70 bg-[#FAF3EE] p-1 shadow-[0_18px_40px_-24px_rgba(74,59,52,0.35)] ${className ?? ""}`}
-      data-testid="studio-logo-badge"
+      className={`group relative aspect-square ${className ?? ""}`}
+      data-testid={testId}
     >
-      <div className="flex size-full flex-col items-center justify-center rounded-full border border-[#E9B9AE]/50 bg-gradient-to-br from-[#FFFBF8] via-[#F8E7E1] to-[#EFD9D2] text-center">
-        <div className="relative flex items-baseline justify-center">
-          <span className="font-heading text-[2.6rem] leading-none tracking-[-0.04em] text-[#6B4F45]">
-            S
-          </span>
-          <span className="font-heading text-[2.6rem] leading-none tracking-[-0.04em] text-[#6B4F45]">
-            M
-          </span>
-          {/* větvička */}
-          <svg viewBox="0 0 40 60" className="absolute -right-6 -top-2 h-12 w-8" aria-hidden>
-            <path d="M20 58 C20 40 20 20 20 4" stroke="#A9B5A3" strokeWidth="1.4" fill="none" />
-            {[10, 20, 30, 40].map((y, i) => (
-              <g key={y}>
-                <ellipse
-                  cx={13 - i * 0.4}
-                  cy={y}
-                  rx="6"
-                  ry="3.4"
-                  fill="#A9B5A3"
-                  opacity={0.85 - i * 0.12}
-                  transform={`rotate(-28 ${13 - i * 0.4} ${y})`}
-                />
-                <ellipse
-                  cx={27 + i * 0.4}
-                  cy={y + 5}
-                  rx="6"
-                  ry="3.4"
-                  fill="#A9B5A3"
-                  opacity={0.72 - i * 0.1}
-                  transform={`rotate(28 ${27 + i * 0.4} ${y + 5})`}
-                />
-              </g>
-            ))}
-          </svg>
-        </div>
-        <p className="mt-1.5 font-heading text-[0.68rem] tracking-[0.34em] text-[#8A7972] uppercase">
-          Studio M
-        </p>
-        <span className="mt-1 h-px w-10 bg-[#C79A7B]/60" aria-hidden />
-        <p className="mt-1 font-script text-base leading-none text-[#C08272]">
-          krásné nehty na dosah ruky
-        </p>
-        <span className="mt-1 text-[#C79A7B]" aria-hidden>
-          ♥
-        </span>
+      {/* rotující přerušovaný prstenec */}
+      <span
+        className="animate-spin-slow pointer-events-none absolute inset-0 rounded-full border border-dashed border-[#C79A7B]/55"
+        aria-hidden
+      />
+      {/* dýchající aura */}
+      <span
+        className="animate-pulse-soft pointer-events-none absolute -inset-3 rounded-full bg-[#F3D3C9]/40 blur-xl"
+        aria-hidden
+      />
+
+      <div className="relative flex size-full items-center justify-center overflow-hidden rounded-full border border-[#E9B9AE]/70 bg-gradient-to-br from-[#FFFBF8] via-[#F8E7E1] to-[#EFD9D2] shadow-[0_18px_40px_-24px_rgba(74,59,52,0.4)] transition-transform duration-700 group-hover:scale-[1.04]">
+        <img
+          src={STUDIO_LOGO}
+          alt="Logo Studio M nails"
+          className="logo-tint size-full origin-center scale-[1.75] object-contain object-top transition-transform duration-[1200ms] group-hover:scale-[1.82] group-hover:rotate-3"
+          data-testid={`${testId}-image`}
+        />
+        {/* lesklý přejezd přes logo */}
+        <span
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{
+            background:
+              "linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.65) 50%, transparent 65%)",
+          }}
+          aria-hidden
+        />
       </div>
     </div>
   );

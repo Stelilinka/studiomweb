@@ -32,7 +32,7 @@ export default function Sparkles({
         const size = 6 + r3 * 12;
         return (
           <svg
-            key={i}
+            key={`sparkle-${seed}-${i}`}
             viewBox="0 0 24 24"
             className="animate-twinkle absolute"
             style={{
