@@ -101,3 +101,9 @@ ukázkovým promptem). Idempotentní (přeskočí, pokud už rezervace existují
 - CSS animace: `float-soft`, `gold-sweep` (+ `gold-text`, `gold-rule`, `gold-frame`, `gold-price`), `gold-twinkle`, `spin-slow`, `marquee`.
 - Hero: plovoucí vystřižené nehty + ruka (cutout), zlatý prach; ceny služeb ve zlatém animovaném gradientu.
 - Logo: generovaný odznak „M / STUDIO NAILS“ (`STUDIO_LOGO`) v hlavičce (levý roh), Menu studia a patičce.
+
+## Fotky klientky (nehty.zip) — aktualizace
+- `public/nehty/` — 9 optimalizovaných fotek (max 1600 px, JPEG q84). V kódu přes `STUDIO_FOTO` v `lib/photos.ts`.
+- Hero koláž: vlevo `velvet-nude-hands.jpg`, vpravo `floral-art-hands.jpg`. Plovoucí vystřižené nehty a ruka z hera ODSTRANĚNY.
+- Karty služeb a galerie nyní používají výhradně fotky klientky; CTA pás = `nude-matte-almond.jpg`.
+- Sekce „3D floral kolekce“ používá dál PNG segmenty z `public/fotky/`.

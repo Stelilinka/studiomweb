@@ -35,9 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { apiGet } from "@/lib/api";
 import {
   GALLERY_PHOTOS,
-  HAND_CUTOUT,
   NAIL_PHOTOS,
-  SEGMENT_NAILS,
   SERVICE_PHOTOS,
   SERVICE_PHOTO_FALLBACK,
 } from "@/lib/photos";
@@ -183,28 +181,6 @@ export default function Home() {
           >
             <Sparkles count={16} seed={2} color="#C79A7B" className="z-10" />
             <GoldDust count={14} seed={3} />
-            {/* plovoucí vystřižené nehty od klientky */}
-            <img
-              src={SEGMENT_NAILS[2]}
-              alt=""
-              aria-hidden
-              className="animate-float-soft pointer-events-none absolute top-6 left-[30%] z-20 h-16 w-auto drop-shadow-[0_12px_22px_rgba(154,114,68,0.4)] sm:h-20"
-              style={{ ["--rot" as string]: "-14deg" }}
-            />
-            <img
-              src={SEGMENT_NAILS[15]}
-              alt=""
-              aria-hidden
-              className="animate-float-soft pointer-events-none absolute right-[32%] bottom-8 z-20 h-14 w-auto drop-shadow-[0_12px_22px_rgba(154,114,68,0.4)] [animation-delay:-2.5s] sm:h-[4.5rem]"
-              style={{ ["--rot" as string]: "12deg" }}
-            />
-            <img
-              src={HAND_CUTOUT}
-              alt=""
-              aria-hidden
-              className="animate-float-soft pointer-events-none absolute -right-6 -bottom-8 z-20 hidden h-56 w-auto drop-shadow-[0_24px_40px_rgba(154,114,68,0.35)] [animation-delay:-4s] lg:block"
-              style={{ ["--rot" as string]: "-6deg" }}
-            />
             <div className="grid items-stretch gap-0 lg:grid-cols-[1.05fr_1.5fr_1.05fr]">
               {/* levá fotka */}
               <div className="relative hidden min-h-[320px] lg:block">
@@ -705,8 +681,8 @@ export default function Home() {
           <Reveal>
             <div className="relative overflow-hidden rounded-[26px] border border-[#EFDCD4]">
               <img
-                src={NAIL_PHOTOS.zpevneni}
-                alt="Jemná manikúra v pudrovém odstínu"
+                src={NAIL_PHOTOS.gelLak}
+                alt="Matná nude modeláž mandlových nehtů"
                 className="absolute inset-0 size-full object-cover"
               />
               <div

@@ -1,0 +1,125 @@
+{
+  "iteration": 5,
+  "summary": "Retest for hero-photo cleanup matrix (no more floating cutout nails/hand in #hero, hero uses new client photos velvet-nude-hands.jpg / floral-art-hands.jpg, service cards & gallery use /nehty/ photos). Re-ran backend suite (5 tests passed) and 8 existing browser checks by name (7 passed, 1 flaky-passed-on-rerun). Added 3 new browser checks for the new hero/photo criteria: 2 passed, 1 failed (real bug — service-card-modelaz-nehtu still serves an external static.prod-images URL, not /nehty/*, violating the literal acceptance criterion even though the image itself loads fine).",
+  "passed": 15,
+  "failed": 1,
+  "flaky": 1,
+  "blocked": 0,
+  "test_error": 0,
+  "retest_needed": true,
+  "bugs": [
+    {
+      "severity": "low",
+      "criterion": "Karty služeb a galerie používají fotky z /nehty/ a načtou se",
+      "description": "service-card-modelaz-nehtu renders an <img> with src 'https://static.prod-images.emergentagent.com/jobs/.../343b9a2a...jpeg' instead of a '/nehty/...' path. Image itself loads correctly (naturalWidth=1264), so it is a data-state/spec-compliance mismatch, not a broken render. Source: NAIL_PHOTOS.modelaz in /app/frontend/src/lib/photos.ts still points to the old external emergentagent static URL while every other service (manikura, gelLak, nailArt, pedikura) and all 4 gallery images already use /nehty/*.jpg from the client's uploaded photos.",
+      "evidence": "run_browser_script 'service-and-gallery-photos-nehty': collected srcs — klasicka-manikura=/nehty/nude-detail-4.jpg, gel-lak=/nehty/nude-matte-almond.jpg, modelaz-nehtu=https://static.prod-images.emergentagent.com/jobs/38975200-.../343b9a2a....jpeg (w=1264), nail-art=/nehty/gold-flower-silk.jpg, pedikura=/nehty/sage-gold-silk.jpg, gallery(4)=all /nehty/*.jpg. Also confirmed by pre-existing persisted check 'service-photo-modelaz-updated.mjs' which explicitly asserts this card's img src includes 'static.prod-images.emergentagent.com' — i.e. this was a deliberate prior choice, now conflicting with the newer matrix wording."
+    }
+  ],
+  "action_items": [],
+  "checks": [
+    {
+      "criterion": "V hero sekci už nejsou plovoucí vystřižené nehty ani vystřižená ruka",
+      "name": "hero-no-floating-cutouts",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "New check: hero.locator('img[src*=\"/fotky/\"]') count() === 0 inside #hero. Passed."
+    },
+    {
+      "criterion": "Hero používá nové fotky klientky a načtou se",
+      "name": "hero-photos-correct-src-load",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "New check: hero-photo-left src includes '/nehty/velvet-nude-hands.jpg', hero-photo-right includes '/nehty/floral-art-hands.jpg', both naturalWidth>0."
+    },
+    {
+      "criterion": "Karty služeb a galerie používají fotky z /nehty/ a načtou se",
+      "name": "service-and-gallery-photos-nehty",
+      "lane": "browser",
+      "status": "failed",
+      "evidence": "New check: 4/5 service cards + all 4 gallery imgs are /nehty/*.jpg with naturalWidth>0; service-card-modelaz-nehtu src is an external static.prod-images.emergentagent.com URL, not /nehty/. See bugs[0]."
+    },
+    {
+      "criterion": "Stránka se načte bez console errors a bez requestů se statusem >= 400",
+      "name": "homepage-loads-clean",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: hero photos/buttons visible, images naturalWidth>0, no response>=400 observed on load."
+    },
+    {
+      "criterion": "Sekce 3D floral kolekce zůstává funkční",
+      "name": "collection-section-images-load",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: nail-collection-grid visible with collection-item-1..8, all /fotky/*.png images naturalWidth>0 (e.g. 3d-floral-nail-art-3.png=125)."
+    },
+    {
+      "criterion": "Ceník a předvolba služby fungují dál",
+      "name": "pricing-list-loads-services",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: 5 service-card-<id> found for all seeded services with price and PODROBNĚJI button."
+    },
+    {
+      "criterion": "Ceník a předvolba služby fungují dál",
+      "name": "service-select-jumps-to-step2",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: clicking service-select-btn-* scrolls to #rezervace and step 2 (date picker) is visible."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services",
+      "name": "test_services_endpoint_returns_seeded_services",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "pytest suite: 5 passed in 7.26s (GET /api/services -> 200 with 5 seeded services)."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce funguje dál",
+      "name": "booking-e2e-flow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: selected service, weekday slot, filled name/phone -> booking-success-confirmation visible."
+    },
+    {
+      "criterion": "Rezervace end-to-end přes průvodce funguje dál",
+      "name": "test_create_booking_end_to_end / test_availability_closed_on_sunday",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "Included in pytest suite run (5 passed in 7.26s): POST /api/bookings -> 200; Sunday availability closed=true."
+    },
+    {
+      "criterion": "Chat Klára a responzivita",
+      "name": "chat-klara-answers-price",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: POST /api/chat -> reply mentioning price in Kč rendered in chat window. Non-fatal console 429 noted (rate-limit warning), reply still delivered."
+    },
+    {
+      "criterion": "Chat Klára a responzivita",
+      "name": "test_chat_returns_price_answer / test_chat_history_is_retrievable",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "Included in pytest suite run (5 passed in 7.26s): POST /api/chat -> 200 non-empty reply mentioning Kč."
+    },
+    {
+      "criterion": "Chat Klára a responzivita (1280x900 no horizontal scroll)",
+      "name": "desktop-large-font-no-horizontal-scroll",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: at 1280x900, scrollWidth<=innerWidth+2; h1 and section headings visible."
+    },
+    {
+      "criterion": "Chat Klára a responzivita (390x844 no horizontal scroll)",
+      "name": "mobile-responsive-no-horizontal-scroll",
+      "lane": "browser",
+      "status": "flaky",
+      "evidence": "First run failed with a transient Vite dev-server 'Failed to load: src/main.tsx' overlay coinciding with console 429 responses (rate limiting), no app bug. Rerun passed cleanly: scrollWidth(390)<=innerWidth(390)+2, hero-cta-book-button and menu-card-cenik visible."
+    }
+  ],
+  "notes": [
+    "hero-no-floating-cutouts and hero-photos-correct-src-load are brand-new checks confirming the fix: NAIL_PHOTOS.heroLeft/heroRight in /app/frontend/src/lib/photos.ts now point to '/nehty/velvet-nude-hands.jpg' and '/nehty/floral-art-hands.jpg', and no <img src*='/fotky/'> remains inside #hero (the cutout nails/hand PNGs are still used, by design, only in #kolekce per spec_deviations/seed_facts).",
+    "The one failing check (service-and-gallery-photos-nehty) surfaces a real, low-severity leftover: NAIL_PHOTOS.modelaz in photos.ts is the only remaining photo across service cards + gallery not sourced from /app/frontend/public/nehty; a pre-existing persisted check (service-photo-modelaz-updated.mjs) explicitly encoded this as intentional in an earlier iteration, but it now conflicts with the current matrix's literal wording ('Všechny <img> ... mají src začínající /nehty/'). Flagging as a bug for main agent to either swap in a /nehty/ photo for modelaz-nehtu or confirm intentional exception.",
+    "Backend suite (3 files, 5 tests) passed clean in 7.26s; unchanged from prior iteration.",
+    "spec_deviations honored: calendar_synced=false expected; AI design image generation out of scope."
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "iteration": 6,
+  "summary": "Retest of the modelaz-nehtu client-photo fix. Updated stale check 'service-photo-modelaz-updated' to assert src starts with /nehty/ (was asserting the old external emergentagent URL) - now passes. Re-ran full backend suite (5 passed) and all 9 relevant browser checks by name - all passed, no regressions in hero/gallery/booking/chat.",
+  "passed": 15,
+  "failed": 0,
+  "flaky": 0,
+  "blocked": 0,
+  "test_error": 0,
+  "retest_needed": false,
+  "bugs": [],
+  "action_items": [],
+  "checks": [
+    {
+      "criterion": "FIX: karta 'Modeláž nehtů' nyní používá fotku klientky z /nehty/",
+      "name": "service-photo-modelaz-updated",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Updated check to assert src.startsWith('/nehty/') instead of the old static.prod-images.emergentagent.com expectation. service-card-modelaz-nehtu img src='/nehty/pearl-blossom-hands.jpg', naturalWidth>0. PASSED."
+    },
+    {
+      "criterion": "Zastaralý check 'service-photo-modelaz-updated' je aktualizován na nové očekávání",
+      "name": "service-photo-modelaz-updated",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Script rewritten (previous .backup created then removed per no-scratch-files rule): now throws if src does not start with '/nehty/'. Confirmed passing against current build."
+    },
+    {
+      "criterion": "Karty služeb a galerie používají fotky z /nehty/ a načtou se (no externí URL)",
+      "name": "service-and-gallery-photos-nehty",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: all 5 service cards (klasicka-manikura, gel-lak, modelaz-nehtu=/nehty/pearl-blossom-hands.jpg w=495, nail-art, pedikura) + 4 gallery imgs all src starting with /nehty/, naturalWidth>0. No static.prod-images.emergentagent.com references."
+    },
+    {
+      "criterion": "Žádná regrese v hero (žádný img z /fotky/ v #hero)",
+      "name": "hero-no-floating-cutouts",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: 0 img[src*=\"/fotky/\"] found inside #hero."
+    },
+    {
+      "criterion": "Hero fotky správné a načtené",
+      "name": "hero-photos-correct-src-load",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: hero-photo-left=/nehty/velvet-nude-hands.jpg, hero-photo-right=/nehty/floral-art-hands.jpg, both naturalWidth>0."
+    },
+    {
+      "criterion": "Stránka bez console errors a bez requestů >= 400",
+      "name": "homepage-loads-clean",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: hero visible, images load, no response>=400 observed."
+    },
+    {
+      "criterion": "Sekce 3D floral kolekce (/fotky/ PNG segmenty) zůstává funkční - no regrese",
+      "name": "collection-section-images-load",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: 8 collection-item imgs, all /fotky/*.png, naturalWidth>0 (e.g. 3d-floral-nail-art-3.png=125)."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services",
+      "name": "pricing-list-loads-services",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: 5 service-card-<id> found for all seeded services."
+    },
+    {
+      "criterion": "Ceník se načítá z /api/services",
+      "name": "test_services_endpoint_returns_seeded_services",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "pytest suite: 5 passed in 7.08s (GET /api/services -> 200 with 5 seeded services)."
+    },
+    {
+      "criterion": "Klik na service-select-btn-<id> => wizard krok 2",
+      "name": "service-select-jumps-to-step2",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: click scrolls to #rezervace, date picker (step 2) visible."
+    },
+    {
+      "criterion": "Rezervační tok dokončení potvrdí rezervaci",
+      "name": "booking-e2e-flow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: service + slot selection, form fill -> booking-success-confirmation visible."
+    },
+    {
+      "criterion": "Rezervační tok dokončení potvrdí rezervaci (backend)",
+      "name": "test_create_booking_end_to_end / test_availability_closed_on_sunday",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "Included in pytest suite run (5 passed in 7.08s): POST /api/bookings -> 200; Sunday availability closed=true."
+    },
+    {
+      "criterion": "POST /api/chat vrací 200 s neprázdným reply",
+      "name": "chat-klara-answers-price",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Re-ran persisted check: chat reply mentioning price in Kč rendered."
+    },
+    {
+      "criterion": "POST /api/chat vrací 200 s neprázdným reply (backend)",
+      "name": "test_chat_returns_price_answer / test_chat_history_is_retrievable",
+      "lane": "backend",
+      "status": "passed",
+      "evidence": "Included in pytest suite run (5 passed in 7.08s): POST /api/chat -> 200 non-empty reply mentioning Kč."
+    }
+  ],
+  "notes": [
+    "Primary fix from prior iteration's only bug is confirmed resolved: NAIL_PHOTOS.modelaz now points to /nehty/pearl-blossom-hands.jpg (client photo), replacing the old external static.prod-images.emergentagent.com URL.",
+    "Updated the stale persisted check 'service-photo-modelaz-updated.mjs' to match the corrected expectation (src.startsWith('/nehty/')) per briefing instruction; old .backup file removed to keep checks/ clean.",
+    "Backend suite (3 files, 5 tests) passed clean in 7.08s, unchanged.",
+    "All 9 relevant browser checks re-run by name only (no script resent) per retest-mode instructions, plus the one updated check re-authored inline. Full matrix (5 acceptance items) is green, no regressions in hero/gallery/booking/chat.",
+    "spec_deviations honored: calendar_synced=false expected; AI design image generation out of scope."
+  ]
+}
