@@ -1,10 +1,10 @@
 """Backend coverage for: 'Ceník se načítá z /api/services a zobrazuje řádky služeb'."""
 
 EXPECTED_SERVICE_IDS = {
-    "klasicka-manikura",
+    "manikura",
     "gel-lak",
-    "modelaz-nehtu",
-    "nail-art",
+    "modelaz-nova",
+    "modelaz-doplneni",
     "pedikura",
 }
 

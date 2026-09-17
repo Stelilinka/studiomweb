@@ -39,7 +39,7 @@ DEMO_BOOKINGS = [
     },
     {
         "id": "demo-nova-002",
-        "service_id": "modelaz-nehtu",
+        "service_id": "modelaz-nova",
         "service_name": "Modeláž nehtů",
         "service_price": "950 Kč",
         "service_duration_min": 120,
@@ -56,7 +56,7 @@ DEMO_BOOKINGS = [
     },
     {
         "id": "demo-dokoncena-003",
-        "service_id": "nail-art",
+        "service_id": "gel-lak",
         "service_name": "Bespoke Nail Art",
         "service_price": "od 100 Kč",
         "service_duration_min": 30,

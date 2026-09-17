@@ -17,6 +17,7 @@ interface Bubble {
   id: string;
   role: ChatRole;
   content: string;
+  imageUrl?: string | null;
 }
 
 const GREETING =
@@ -61,7 +62,7 @@ export default function ChatAssistant({
       setSessionId(data.session_id);
       setBubbles((prev) => [
         ...prev,
-        { id: nextId(), role: "assistant", content: data.reply },
+        { id: nextId(), role: "assistant", content: data.reply, imageUrl: data.image_url },
       ]);
       if (data.booking_id) {
         toast.success("Rezervace vytvořena! Najdete ji i v přehledu studia.");
@@ -226,20 +227,38 @@ export default function ChatAssistant({
                     }`}
                     data-testid={`chat-bubble-${bubble.role}`}
                   >
-                    <p
-                      className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-line ${
-                        bubble.role === "user"
-                          ? "rounded-br-md bg-gradient-to-br from-[#C99181] to-[#B8776A] text-white shadow-[0_10px_22px_-14px_rgba(120,74,60,0.8)]"
-                          : "rounded-bl-md border border-[#F0DDD4] bg-white text-[#5E4238] shadow-[0_10px_22px_-18px_rgba(90,55,44,0.5)]"
-                      }`}
-                    >
-                      {bubble.content}
-                    </p>
+                    <div className="flex max-w-[85%] flex-col gap-2">
+                      <p
+                        className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-line ${
+                          bubble.role === "user"
+                            ? "rounded-br-md bg-gradient-to-br from-[#C99181] to-[#B8776A] text-white shadow-[0_10px_22px_-14px_rgba(120,74,60,0.8)]"
+                            : "rounded-bl-md border border-[#F0DDD4] bg-white text-[#5E4238] shadow-[0_10px_22px_-18px_rgba(90,55,44,0.5)]"
+                        }`}
+                      >
+                        {bubble.content}
+                      </p>
+                      {bubble.imageUrl && (
+                        <figure
+                          className="animate-msg-in relative overflow-hidden rounded-2xl border border-[#E9CFC4] bg-white p-1.5 shadow-[0_16px_34px_-22px_rgba(90,55,44,0.6)]"
+                          data-testid="chat-design-image"
+                        >
+                          <img
+                            src={bubble.imageUrl}
+                            alt="Vygenerovaný návrh vašich nehtů"
+                            className="w-full rounded-xl"
+                          />
+                          <Sparkles count={8} seed={4} color="#C79A7B" />
+                          <figcaption className="px-2 py-1.5 text-[10px] tracking-[0.14em] text-[#A98F84] uppercase">
+                            Váš návrh od Kláry
+                          </figcaption>
+                        </figure>
+                      )}
+                    </div>
                   </div>
                 ))}
 
                 {send.isPending && (
-                  <div className="flex justify-start" data-testid="chat-typing-indicator">
+                  <div className="flex flex-col items-start gap-2" data-testid="chat-typing-indicator">
                     <span className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-[#F0DDD4] bg-white px-4 py-3">
                       {[0, 1, 2].map((i) => (
                         <span
@@ -251,6 +270,10 @@ export default function ChatAssistant({
                           }}
                         />
                       ))}
+                    </span>
+                    <span className="flex items-center gap-2 pl-2 text-[11px] text-[#A98F84]">
+                      <SparkIcon className="animate-gold-twinkle size-3 text-[#C79A7B]" aria-hidden />
+                      Klára píše — návrh nehtů může chvilku trvat…
                     </span>
                   </div>
                 )}

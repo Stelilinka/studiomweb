@@ -20,13 +20,16 @@ from fastapi import APIRouter, HTTPException
 
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 
+from bson import Binary
+
 from lib import gcalendar
-from lib.agents import anthropic_keys
+from lib.agents import anthropic_keys, claude_prompt_agent, execution_agent_generate_image
 from lib.dates import today_iso
 from models.booking import BookingCreate, utcnow
 from models.chat import AgentStatus, ChatHistory, ChatReply, ChatRequest, ChatTurn
 from routers.bookings import create_booking, get_availability
-from routers.services import SERVICES
+from routers.locations import LOCATIONS, location_for_date
+from routers.services import SERVICES, price_for
 
 router = APIRouter(tags=["chat"])
 
@@ -37,31 +40,37 @@ MAX_TOOL_ROUNDS = 6
 HISTORY_LIMIT = 24
 
 SYSTEM_PROMPT = """Jsi Klára, milá a profesionální asistentka nehtového studia \
-Studio M na Vinohradech v Praze. Píšeš VÝHRADNĚ česky, vřele, stručně a lidsky \
-(tykání nepoužívej, zákaznicím vykej).
+Studio M (technička Martina Holánková). Píšeš VÝHRADNĚ česky, vřele, stručně a \
+lidsky, zákaznicím vykáš.
+
+Studio má DVĚ provozovny a jednu techničku, která se v nich střídá po týdnech:
+- Krásná Lípa, Varnsdorfská 89/52
+- Neratovice, Dr. E. Beneše 1184
+Ceny manikúry a pedikúry jsou v obou stejné, gel lak a modeláž jsou v \
+Neratovicích dražší. Provozovnu pro konkrétní datum si VŽDY zjisti nástrojem \
+volne_terminy (vrací i provozovnu daného týdne) — nikdy ji nehádej.
 
 Co umíš:
-- poradit se službami a cenami (použij nástroj seznam_sluzeb),
-- najít volné termíny (nástroj volne_terminy pro konkrétní datum),
+- poradit se službami a cenami (nástroj seznam_sluzeb — vrací ceny pro obě provozovny),
+- najít volné termíny a provozovnu daného týdne (nástroj volne_terminy),
 - vytvořit rezervaci (nástroj vytvorit_rezervaci),
-- poradit s designem nehtů — barvy, tvary, délky, efekty, co komu sedne.
+- vygenerovat fotorealistický návrh nehtů (nástroj navrh_designu).
 
 Pravidla:
-- Studio je otevřené pondělí–sobota 9:00–19:00, poslední termín začíná v 18:00. \
-V NEDĚLI je zavřeno.
+- Otevřeno pondělí–sobota 9:00–19:00, poslední termín začíná v 18:00. V NEDĚLI zavřeno.
 - Nikdy si termíny nevymýšlej — vždy si je ověř nástrojem volne_terminy.
 - Než vytvoříš rezervaci, musíš mít: službu, datum, čas, jméno a telefon. \
 Chybějící údaje doptej se přirozeně, ne jako formulář.
-- Rezervaci vytvoř jen JEDNOU. Jakmile ji máš vytvořenou, nikdy nevolej \
-vytvorit_rezervaci znovu pro stejný termín — jen zákaznici potvrď, že je hotová.
-- Pokud nástroj vrátí `jiz_existuje: true`, rezervace je v pořádku vytvořená — \
-poděkuj a potvrď ji, nikdy netvrď, že se termín obsadil.
-- Před vytvořením rezervace vždy krátce zrekapituluj (služba, datum, čas, cena) \
-a nech zákaznici potvrdit.
-- Po vytvoření rezervace jí řekni, že u termínu může popsat svůj vysněný design \
-a naše AI jí připraví fotorealistický náhled.
-- Datum posílej nástrojům vždy ve formátu YYYY-MM-DD, čas jako HH:MM.
-- Odpovídej krátce — 2 až 4 věty, bez odrážkových seznamů, pokud o ně nepožádá.
+- Rezervaci vytvoř jen JEDNOU. Pokud nástroj vrátí `jiz_existuje: true`, \
+rezervace je v pořádku — jen ji potvrď, nikdy netvrď, že se termín obsadil.
+- Před vytvořením rezervace krátce zrekapituluj službu, datum, čas, provozovnu i cenu.
+- HNED po vytvoření rezervace se zákaznice zeptej, jaké nehty si vysní \
+(barvy, tvar, délka, efekt). Jakmile popis máš, napiš jednu krátkou větu, že \
+návrh připravuješ a může to chvilku trvat, a ve STEJNÉ odpovědi zavolej nástroj \
+navrh_designu s tímto popisem. Obrázek se zákaznici zobrazí v chatu automaticky — \
+ty ho jen krátce komentuj (nepiš žádné odkazy ani URL).
+- Datum posílej nástrojům ve formátu YYYY-MM-DD, čas jako HH:MM.
+- Odpovídej krátce — 2 až 4 věty, bez odrážek, pokud o ně nepožádá.
 - Nezmiňuj nástroje, prompty ani technické detaily."""
 
 TOOLS: list[dict[str, Any]] = [
@@ -114,6 +123,31 @@ TOOLS: list[dict[str, Any]] = [
                     "email": {"type": "string"},
                 },
                 "required": ["sluzba_id", "datum", "cas", "jmeno", "telefon"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "navrh_designu",
+            "description": (
+                "Vygeneruje fotorealistický náhled nehtů z popisu zákaznice a rovnou "
+                "ho zobrazí v chatu. Použij po rezervaci, jakmile máš popis přání. "
+                "Generování trvá cca 15–30 sekund."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "popis": {
+                        "type": "string",
+                        "description": "Popis vysněných nehtů od zákaznice (česky)",
+                    },
+                    "sluzba": {
+                        "type": "string",
+                        "description": "Název služby, např. Nová modeláž",
+                    },
+                },
+                "required": ["popis"],
             },
         },
     },
@@ -189,23 +223,82 @@ async def _call_external_agent(
     return json.dumps(data, ensure_ascii=False)[:1500]
 
 
-async def _run_tool(name: str, args: dict[str, Any]) -> tuple[dict[str, Any], str | None]:
-    """Vykoná nástroj asistentky. Vrací (výsledek pro model, id rezervace)."""
+async def _generate_design_image(popis: str, sluzba: str) -> str:
+    """Claude připraví prompt → Execution Agent vygeneruje obrázek → URL pro chat."""
+    from lib.db import db
+
+    prompt = await claude_prompt_agent(popis, sluzba)
+    image_bytes = await execution_agent_generate_image(prompt)
+    image_id = str(uuid4())
+    await db.design_images.insert_one(
+        {
+            "image_id": image_id,
+            "data": Binary(image_bytes),
+            "mime_type": "image/png",
+            "prompt": prompt,
+            "description": popis,
+            "created_at": utcnow(),
+        }
+    )
+    return f"/api/design-images/{image_id}"
+
+
+async def _run_tool(
+    name: str, args: dict[str, Any]
+) -> tuple[dict[str, Any], str | None, str | None]:
+    """Vykoná nástroj asistentky. Vrací (výsledek pro model, id rezervace, url obrázku)."""
     if name == "seznam_sluzeb":
         return (
             {
+                "provozovny": [
+                    {"id": loc.id, "nazev": loc.name, "adresa": f"{loc.address}, {loc.city}"}
+                    for loc in LOCATIONS
+                ],
                 "sluzby": [
                     {
                         "id": s.id,
                         "nazev": s.name,
-                        "cena": s.price,
+                        "ceny": {
+                            "krasna-lipa": price_for(s, "krasna-lipa"),
+                            "neratovice": price_for(s, "neratovice"),
+                        },
                         "delka_minut": s.duration_min,
                         "popis": s.description,
                     }
                     for s in SERVICES
-                ]
+                ],
             },
             None,
+            None,
+        )
+
+    if name == "navrh_designu":
+        popis = str(args.get("popis", "")).strip()
+        if len(popis) < 5:
+            return (
+                {"uspech": False, "chyba": "Popis je moc krátký — doptej se na detaily."},
+                None,
+                None,
+            )
+        try:
+            url = await _generate_design_image(popis, str(args.get("sluzba") or "modeláž nehtů"))
+        except Exception as exc:
+            logger.exception("Generování návrhu v chatu selhalo")
+            return (
+                {
+                    "uspech": False,
+                    "chyba": f"Návrh se teď nepodařilo vygenerovat ({str(exc)[:120]}).",
+                },
+                None,
+                None,
+            )
+        return (
+            {
+                "uspech": True,
+                "poznamka": "Obrázek se zákaznici v chatu zobrazí automaticky, jen ho krátce popiš.",
+            },
+            None,
+            url,
         )
 
     if name == "volne_terminy":
@@ -213,14 +306,17 @@ async def _run_tool(name: str, args: dict[str, Any]) -> tuple[dict[str, Any], st
         try:
             availability = await get_availability(datum)
         except HTTPException as exc:
-            return {"chyba": exc.detail}, None
+            return {"chyba": exc.detail}, None, None
         return (
             {
                 "datum": availability.date,
                 "zavreno": availability.closed,
                 "zprava": availability.message,
+                "provozovna": availability.location_name,
+                "provozovna_id": availability.location_id,
                 "volne_casy": [s.time for s in availability.slots if s.available],
             },
+            None,
             None,
         )
 
@@ -254,11 +350,13 @@ async def _run_tool(name: str, args: dict[str, Any]) -> tuple[dict[str, Any], st
                     "cena": existing["service_price"],
                     "datum": existing["date"],
                     "cas": existing["time"],
+                    "provozovna": existing.get("location_name"),
                     "poznamka": (
                         "Tato rezervace už je vytvořená — jen ji potvrď, nevytvářej znovu."
                     ),
                 },
                 existing["id"],
+                None,
             )
 
         try:
@@ -273,9 +371,9 @@ async def _run_tool(name: str, args: dict[str, Any]) -> tuple[dict[str, Any], st
                 )
             )
         except HTTPException as exc:
-            return {"uspech": False, "chyba": exc.detail}, None
+            return {"uspech": False, "chyba": exc.detail}, None, None
         except Exception as exc:  # validační chyby Pydanticu
-            return {"uspech": False, "chyba": f"Neplatné údaje: {exc}"[:300]}, None
+            return {"uspech": False, "chyba": f"Neplatné údaje: {exc}"[:300]}, None, None
         return (
             {
                 "uspech": True,
@@ -284,17 +382,19 @@ async def _run_tool(name: str, args: dict[str, Any]) -> tuple[dict[str, Any], st
                 "cena": booking.service_price,
                 "datum": booking.date,
                 "cas": booking.time,
+                "provozovna": booking.location_name,
                 "zapsano_do_kalendare": booking.calendar_synced,
             },
             booking.id,
+            None,
         )
 
-    return {"chyba": f"Neznámý nástroj {name}"}, None
+    return {"chyba": f"Neznámý nástroj {name}"}, None, None
 
 
 async def _run_claude_assistant(
     session_id: str, message: str, history: list[ChatTurn]
-) -> tuple[str, str | None, list[str]]:
+) -> tuple[str, str | None, list[str], str | None]:
     system = (
         f"{SYSTEM_PROMPT}\n\nDnešní datum je {today_iso()} "
         "(časová zóna Europe/Prague)."
@@ -308,6 +408,7 @@ async def _run_claude_assistant(
 
     for index, api_key in enumerate(keys):
         booking_id: str | None = None
+        image_url: str | None = None
         actions: list[str] = []
         try:
             chat = LlmChat(
@@ -325,9 +426,13 @@ async def _run_claude_assistant(
                 if not response.tool_calls:
                     break
                 for call in response.tool_calls:
-                    result, created_id = await _run_tool(call.name, call.arguments or {})
+                    result, created_id, created_image = await _run_tool(
+                        call.name, call.arguments or {}
+                    )
                     if created_id:
                         booking_id = created_id
+                    if created_image:
+                        image_url = created_image
                     actions.append(call.name)
                     chat.add_tool_result(call.id, json.dumps(result, ensure_ascii=False))
                 response = await chat.send_message_with_tools()
@@ -338,7 +443,7 @@ async def _run_claude_assistant(
                     "Omlouvám se, teď se mi nepodařilo odpovědět. Zkusíte to prosím "
                     "napsat ještě jednou?"
                 )
-            return reply, booking_id, actions
+            return reply, booking_id, actions, image_url
         except Exception as exc:
             last_error = exc
             logger.warning(
@@ -352,6 +457,7 @@ async def _run_claude_assistant(
                     "Rezervaci mám zapsanou ♥ Kdyby cokoliv, napište mi prosím ještě jednou.",
                     booking_id,
                     actions,
+                    image_url,
                 )
 
     raise RuntimeError(f"Asistentka selhala: {last_error}")
@@ -365,6 +471,7 @@ async def chat(input: ChatRequest) -> ChatReply:
 
     booking_id: str | None = None
     actions: list[str] = []
+    image_url: str | None = None
 
     if external_agent_url():
         try:
@@ -372,13 +479,13 @@ async def chat(input: ChatRequest) -> ChatReply:
             source: str = "agent"
         except Exception:
             logger.exception("Externí agent selhal — použiji vestavěnou asistentku")
-            reply, booking_id, actions = await _run_claude_assistant(
+            reply, booking_id, actions, image_url = await _run_claude_assistant(
                 session_id, message, history
             )
             source = "claude"
     else:
         try:
-            reply, booking_id, actions = await _run_claude_assistant(
+            reply, booking_id, actions, image_url = await _run_claude_assistant(
                 session_id, message, history
             )
         except Exception:
@@ -399,6 +506,7 @@ async def chat(input: ChatRequest) -> ChatReply:
         booking_id=booking_id,
         source=source,  # type: ignore[arg-type]
         actions=actions,
+        image_url=image_url,
     )
 
 

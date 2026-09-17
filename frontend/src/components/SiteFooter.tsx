@@ -16,24 +16,40 @@ export default function SiteFooter() {
           <p className="font-heading text-[10px] tracking-[0.26em] text-[#A98F84] uppercase">
             Kontakt
           </p>
-          <ul className="mt-4 space-y-3 text-sm text-[#6B4F45]">
-            <li className="flex items-center gap-2.5">
-              <MapPin className="size-4 text-[#C08272]" aria-hidden />
-              Vinohradská 48, Praha 2
+          <ul className="mt-4 space-y-3 text-sm text-[#6B4F45]" data-testid="footer-contact">
+            <li className="flex items-start gap-2.5">
+              <MapPin className="mt-0.5 size-4 shrink-0 text-[#C08272]" aria-hidden />
+              <span>
+                Varnsdorfská 89/52, Krásná Lípa
+                <span className="block">Dr. E. Beneše 1184, Neratovice</span>
+              </span>
             </li>
             <li className="flex items-center gap-2.5">
               <Phone className="size-4 text-[#C08272]" aria-hidden />
-              +420 777 123 456
+              <a href="tel:+420777575796" className="transition-colors duration-300 hover:text-[#C08272]">
+                777 575 796
+              </a>
             </li>
             <li className="flex items-center gap-2.5">
               <Mail className="size-4 text-[#C08272]" aria-hidden />
-              ahoj@studiom.cz
+              <a
+                href="mailto:martina.holankova@email.cz"
+                className="break-all transition-colors duration-300 hover:text-[#C08272]"
+              >
+                martina.holankova@email.cz
+              </a>
             </li>
             <li className="flex items-center gap-2.5">
               <Instagram className="size-4 text-[#C08272]" aria-hidden />
               @studio.m.nails
             </li>
           </ul>
+          <p className="mt-4 text-xs leading-relaxed text-[#8A7972]">
+            Martina Holánková · IČO 63854023
+            <span className="block">
+              Jedna technička, dvě provozovny — střídají se po týdnech.
+            </span>
+          </p>
         </div>
 
         <div>
@@ -62,7 +78,7 @@ export default function SiteFooter() {
 
       <div className="border-t border-[#E6D2CA]">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-6 text-[11px] text-[#A98F84] sm:flex-row sm:px-8">
-          <p>© {new Date().getFullYear()} Studio M — Všechna práva vyhrazena.</p>
+          <p>© {new Date().getFullYear()} Studio M · Martina Holánková, IČO 63854023</p>
           <p>Objednávkový systém s AI asistencí</p>
           <Link
             to="/admin"

@@ -21,7 +21,8 @@ from models.booking import (
     Slot,
     utcnow,
 )
-from routers.services import SERVICES_BY_ID
+from routers.locations import location_for_date
+from routers.services import SERVICES_BY_ID, price_for
 
 router = APIRouter(tags=["bookings"])
 
@@ -61,6 +62,9 @@ def _image_url(booking_id: str) -> str:
 @router.get("/availability", response_model=Availability)
 async def get_availability(date: str) -> Availability:
     day = _parse_date(date)
+    location = await location_for_date(day)
+    loc_id = location.id if location else None
+    loc_name = location.name if location else None
     today = datetime.now(TZ).date()
     if day < today:
         return Availability(
@@ -68,6 +72,8 @@ async def get_availability(date: str) -> Availability:
             closed=True,
             message="Tento termín už je v minulosti. Vyberte prosím novější datum.",
             slots=[Slot(time=t, available=False) for t in HOURLY_SLOTS],
+            location_id=loc_id,
+            location_name=loc_name,
         )
     if day.weekday() == 6:  # neděle
         return Availability(
@@ -75,6 +81,8 @@ async def get_availability(date: str) -> Availability:
             closed=True,
             message="V neděli je studio zavřené. Těšíme se na vás od pondělí!",
             slots=[Slot(time=t, available=False) for t in HOURLY_SLOTS],
+            location_id=loc_id,
+            location_name=loc_name,
         )
 
     slots: list[Slot] = []
@@ -91,7 +99,13 @@ async def get_availability(date: str) -> Availability:
             day.year, day.month, day.day, hour, 0, tzinfo=TZ
         ) <= now
         slots.append(Slot(time=time, available=not taken and not past))
-    return Availability(date=date, closed=False, slots=slots)
+    return Availability(
+        date=date,
+        closed=False,
+        slots=slots,
+        location_id=loc_id,
+        location_name=loc_name,
+    )
 
 
 @router.post("/bookings", response_model=Booking)
@@ -129,10 +143,21 @@ async def create_booking(input: BookingCreate) -> Booking:
             detail="Vybraný termín je bohužel už obsazený. Vyberte prosím jiný čas.",
         )
 
+    # Provozovna podle plánu týdne (klient ji může poslat, jinak ji dohledáme)
+    location = await location_for_date(day)
+    location_id = input.location_id or (location.id if location else None)
+    location_name = location.name if location else None
+    if input.location_id and location and input.location_id != location.id:
+        # plán týdne má přednost — technička je jen jedna
+        location_id = location.id
+
+    payload = input.model_dump()
+    payload["location_id"] = location_id
     booking = Booking(
-        **input.model_dump(),
+        **payload,
+        location_name=location_name,
         service_name=service.name,
-        service_price=service.price,
+        service_price=price_for(service, location_id),
         service_duration_min=service.duration_min,
     )
     doc = booking.model_dump()
@@ -274,6 +299,15 @@ async def get_design_image(booking_id: str) -> Response:
         raise HTTPException(
             status_code=404, detail="Obrázek designu zatím není k dispozici."
         )
+    return Response(content=doc["data"], media_type=doc.get("mime_type", "image/png"))
+
+
+@router.get("/design-images/{image_id}")
+async def get_chat_design_image(image_id: str) -> Response:
+    """Návrh vygenerovaný asistentkou v chatu (mimo konkrétní rezervaci)."""
+    doc = await db.design_images.find_one({"image_id": image_id})
+    if not doc or not doc.get("data"):
+        raise HTTPException(status_code=404, detail="Obrázek návrhu nenalezen.")
     return Response(content=doc["data"], media_type=doc.get("mime_type", "image/png"))
 
 

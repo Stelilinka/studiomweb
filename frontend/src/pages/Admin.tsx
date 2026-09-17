@@ -9,6 +9,7 @@ import { ArrowLeft, CalendarCheck2, CircleAlert, Eye } from "lucide-react";
 import { apiGet, apiPatch } from "@/lib/api";
 import type { Booking, BookingStatus, CalendarStatus } from "@/types";
 import { PIPELINE_LABELS, STATUS_LABELS, STATUS_ORDER, formatCzechDate } from "@/types";
+import WeekPlanEditor from "@/components/WeekPlanEditor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -127,6 +128,8 @@ export default function Admin() {
           </div>
         </div>
 
+        <WeekPlanEditor />
+
         {bookingsQuery.isError && (
           <p className="mt-8 rounded-2xl border border-[#B91C1C]/25 bg-[#B91C1C]/5 p-5 text-sm text-[#B91C1C]" data-testid="admin-error">
             Rezervace se nepodařilo načíst. Zkuste obnovit stránku.
@@ -164,7 +167,12 @@ export default function Admin() {
               <TableBody>
                 {bookings.map((booking) => (
                   <TableRow key={booking.id} data-testid={`admin-booking-row-${booking.id}`}>
-                    <TableCell className="whitespace-nowrap font-medium">{formatCzechDate(booking.date)}</TableCell>
+                    <TableCell className="whitespace-nowrap font-medium">
+                      {formatCzechDate(booking.date)}
+                      <span className="block text-xs text-[#6E675F]">
+                        {booking.location_name ?? "—"}
+                      </span>
+                    </TableCell>
                     <TableCell>{booking.time}</TableCell>
                     <TableCell>
                       {booking.name}
@@ -225,6 +233,7 @@ export default function Admin() {
                             <DialogDescription>
                               {booking.service_name} · {booking.service_price} ·{" "}
                               {booking.service_duration_min} min
+                              {booking.location_name ? ` · ${booking.location_name}` : ""}
                             </DialogDescription>
                           </DialogHeader>
                           <div className="space-y-4" data-testid="admin-booking-detail">

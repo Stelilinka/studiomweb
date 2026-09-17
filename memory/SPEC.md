@@ -107,3 +107,13 @@ ukázkovým promptem). Idempotentní (přeskočí, pokud už rezervace existují
 - Hero koláž: vlevo `velvet-nude-hands.jpg`, vpravo `floral-art-hands.jpg`. Plovoucí vystřižené nehty a ruka z hera ODSTRANĚNY.
 - Karty služeb a galerie nyní používají výhradně fotky klientky; CTA pás = `nude-matte-almond.jpg`.
 - Sekce „3D floral kolekce“ používá dál PNG segmenty z `public/fotky/`.
+
+## Dvě provozovny, ceník a návrh v chatu (aktualizace)
+- **Provozovny** (`backend/routers/locations.py`): `krasna-lipa` (Varnsdorfská 89/52, Krásná Lípa) a `neratovice` (Dr. E. Beneše 1184). Jedna technička (Martina Holánková) se střídá po týdnech.
+- Kolekce `location_weeks`: {iso_week, monday, location_id}. Při prázdné DB se předvyplní 16 týdnů střídavě od aktuálního. Ruční editace: `GET /api/location-weeks?weeks=12`, `PUT /api/location-weeks/{iso_week}` — UI v administraci (`WeekPlanEditor.tsx`).
+- `GET /api/locations`, `GET /api/locations/current` — banner na webu + sekce „Kde nás najdete“ s mapami (`LocationsSection.tsx`).
+- **Ceník** (`routers/services.py`): každá služba má `prices` per provozovna; `GET /api/services?location=` vrací `price` pro danou provozovnu. Manikúra 380/60 min, Základní pedikúra 380/60, Gel lak 480 KL / 580 NE (60), Nová modeláž 650/900 (120), Doplnění modeláže 530/780 (120).
+- Rezervace ukládá `location_id`/`location_name` (podle plánu týdne) a cenu dané provozovny; `GET /api/availability` vrací provozovnu týdne.
+- **Klára generuje návrh v chatu**: nástroj `navrh_designu` (Claude prompt → Execution Agent obrázek) uloží PNG do `design_images` s `image_id`, `POST /api/chat` vrací `image_url` (`GET /api/design-images/{image_id}`). Automaticky po rezervaci, s čekací animací v chatu.
+- Kontakt: 777 575 796, martina.holankova@email.cz, IČO 63854023 (patička).
+- Recenze: hodnocení 4,8 / 5 z více než 50 recenzí. Akce: první návštěva −5 % (nová modeláž), přiveď kamarádku 2 × −5 %, desátá návštěva = zdobení zdarma.

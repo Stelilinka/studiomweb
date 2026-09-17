@@ -218,6 +218,12 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
                 <Clock className="size-4 text-[#C08272]" aria-hidden />
                 Volné časy{date ? ` — ${format(date, "d. MMMM", { locale: cs })}` : ""}
               </p>
+              {availability?.location_name && (
+                <p className="mt-1.5 text-xs text-[#8A7972]" data-testid="availability-location">
+                  Tento týden se pracuje v provozovně{" "}
+                  <span className="font-medium text-[#C08272]">{availability.location_name}</span>
+                </p>
+              )}
               {!date && <p className="mt-4 text-sm text-[#8A7972]">Nejdřív vyberte datum v kalendáři.</p>}
               {date && availabilityQuery.isPending && (
                 <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -276,7 +282,12 @@ export default function BookingWizard({ autoServiceId }: { autoServiceId: string
                 <span className="font-medium text-[#5E4238]">{selectedService.name}</span>
                 <span>{formatCzechDate(dateStr)}</span>
                 <span>{time}</span>
-                <span className="ml-auto font-heading text-base text-[#C08272]">{selectedService.price}</span>
+                {availability?.location_name && <span>{availability.location_name}</span>}
+                <span className="ml-auto font-heading text-base text-[#C08272]" data-testid="summary-price">
+                  {availability?.location_id
+                    ? (selectedService.prices?.[availability.location_id] ?? selectedService.price)
+                    : selectedService.price}
+                </span>
               </div>
             )}
             <div className="mt-5 grid gap-4 sm:grid-cols-2">

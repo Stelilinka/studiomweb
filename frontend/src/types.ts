@@ -1,10 +1,35 @@
 // Ručně psaná zrcadla Pydantic modelů z backend/models/booking.py — nic
 // nehodnotí přes HTTP hranici, synchronizace je ruční disciplína.
 
+export interface Location {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  maps_query: string;
+}
+
+export interface WeekPlanItem {
+  iso_week: string;
+  monday: string;
+  sunday: string;
+  location_id: string | null;
+  location_name: string | null;
+  is_current: boolean;
+}
+
+export interface CurrentLocation {
+  iso_week: string;
+  monday: string;
+  sunday: string;
+  location: Location | null;
+}
+
 export interface Service {
   id: string;
   name: string;
   price: string;
+  prices: Record<string, string>;
   duration_min: number;
   tag: string;
   description: string;
@@ -20,6 +45,8 @@ export interface Availability {
   closed: boolean;
   message: string | null;
   slots: Slot[];
+  location_id: string | null;
+  location_name: string | null;
 }
 
 export type BookingStatus = "nova" | "potvrzena" | "dokoncena" | "zrusena";
@@ -31,6 +58,8 @@ export interface Booking {
   service_name: string;
   service_price: string;
   service_duration_min: number;
+  location_id: string | null;
+  location_name: string | null;
   date: string;
   time: string;
   name: string;
@@ -70,6 +99,7 @@ export interface ChatReply {
   booking_id: string | null;
   source: "agent" | "claude";
   actions: string[];
+  image_url: string | null;
 }
 
 export interface ChatHistory {

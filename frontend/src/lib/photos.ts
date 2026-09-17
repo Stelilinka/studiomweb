@@ -40,10 +40,10 @@ export const NAIL_PHOTOS = {
 
 // Fotka ke každé službě z ceníku (id ze backendu)
 export const SERVICE_PHOTOS: Record<string, string> = {
-  "klasicka-manikura": NAIL_PHOTOS.manikura,
+  manikura: NAIL_PHOTOS.manikura,
   "gel-lak": NAIL_PHOTOS.gelLak,
-  "modelaz-nehtu": NAIL_PHOTOS.modelaz,
-  "nail-art": NAIL_PHOTOS.nailArt,
+  "modelaz-nova": NAIL_PHOTOS.modelaz,
+  "modelaz-doplneni": NAIL_PHOTOS.nailArt,
   pedikura: NAIL_PHOTOS.peceONehty,
 };
 

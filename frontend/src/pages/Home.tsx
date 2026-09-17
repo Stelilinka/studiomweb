@@ -19,6 +19,7 @@ import BookingWizard from "@/components/BookingWizard";
 import ChatAssistant from "@/components/ChatAssistant";
 import { GoldCorners, GoldDust, GoldRule } from "@/components/GoldOrnament";
 import LogoBadge from "@/components/LogoBadge";
+import LocationsSection, { CurrentWeekBanner } from "@/components/LocationsSection";
 import MenuCards from "@/components/MenuCards";
 import NailCollection from "@/components/NailCollection";
 import NailPreview, {
@@ -60,17 +61,17 @@ const RIBBON = [
 const REVIEWS = [
   {
     author: "Tereza K.",
-    service: "Gel lak + Nail art",
+    service: "Gel lak",
     text: "Konečně nemusím nikam volat. Termín jsem měla vybraný za dvě minuty a nehty jsou pokaždé nádherné a drží přes měsíc bez jediného odštípnutí.",
   },
   {
     author: "Karolína M.",
-    service: "Modeláž nehtů",
+    service: "Nová modeláž",
     text: "Jemná práce, krásné a čisté prostředí a výsledek přesně podle mé představy. Líbí se mi, že si styl můžu popsat předem.",
   },
   {
     author: "Michaela V.",
-    service: "Klasická manikúra",
+    service: "Manikúra",
     text: "Líbí se mi, že hned vidím volné časy a můžu se objednat i večer z mobilu. Studio M je moje srdcová záležitost.",
   },
 ];
@@ -78,18 +79,18 @@ const REVIEWS = [
 const PROMOS = [
   {
     title: "První návštěva",
-    value: "−15 %",
-    text: "Na svou první manikúru nebo gel lak u nás dostanete patnáctiprocentní slevu.",
+    value: "−5 %",
+    text: "Na svou první novou modeláž nehtů u nás dostanete pětiprocentní slevu.",
   },
   {
     title: "Přiveď kamarádku",
-    value: "2 × −10 %",
-    text: "Přijďte spolu a slevu deset procent dostanete obě — na jakoukoliv službu.",
+    value: "2 × −5 %",
+    text: "Přijďte spolu a pětiprocentní slevu dostanete obě — na jakoukoliv službu.",
   },
   {
-    title: "Doplnění do 4 týdnů",
-    value: "−100 Kč",
-    text: "Dodržíte-li interval doplnění modeláže, odečteme vám stovku z ceny.",
+    title: "Desátá návštěva",
+    value: "Zdobení zdarma",
+    text: "Při desáté návštěvě máte jedno zdobení nehtu navíc zcela zdarma.",
   },
 ];
 
@@ -121,7 +122,7 @@ function SmallPill({
 
 function Stars() {
   return (
-    <div className="flex gap-0.5" aria-label="Hodnocení 5 z 5">
+    <div className="flex gap-0.5" aria-label="Hodnocení 4,8 z 5">
       {Array.from({ length: 5 }).map((_, i) => (
         <Star key={`star-${i}`} className="size-3.5 fill-[#C79A7B] text-[#C79A7B]" aria-hidden />
       ))}
@@ -275,9 +276,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== BANNER AKTUÁLNÍHO TÝDNE ===== */}
+      <div className="mx-auto mt-8 max-w-6xl px-3 sm:px-5">
+        <Reveal>
+          <CurrentWeekBanner />
+        </Reveal>
+      </div>
+
       {/* ===== BĚŽÍCÍ PÁS ===== */}
       <div
-        className="relative mt-12 flex overflow-hidden border-y border-[#EADCD4] bg-[#F3E4DC] py-3"
+        className="relative mt-10 flex overflow-hidden border-y border-[#EADCD4] bg-[#F3E4DC] py-3"
         data-testid="ribbon-marquee"
       >
         {[0, 1].map((dup) => (
@@ -317,11 +325,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SLUŽBY A CENY — fotokarty s drobnými tlačítky ===== */}
+      {/* ===== SLUŽBY — fotokarty bez cen (ceník je u provozovny) ===== */}
       <section id="sluzby" className="scroll-mt-24 px-3 pb-6 sm:px-5">
         <div className="mx-auto max-w-6xl">
           <Reveal>
-            <SectionTitle testId="services-section-title">Služby a ceny</SectionTitle>
+            <SectionTitle testId="services-section-title">Naše služby</SectionTitle>
+            <p className="mx-auto mt-4 max-w-xl text-center text-[0.95rem] leading-relaxed text-[#8A7972]">
+              Vyberte si službu — ceník každé provozovny najdete v sekci
+              „Kde nás najdete“ hned nad mapou.
+            </p>
           </Reveal>
 
           {servicesQuery.isError && (
@@ -358,7 +370,6 @@ export default function Home() {
                     <h3 className="font-heading text-[1.6rem] leading-tight tracking-[0.14em] text-[#5E4238] uppercase sm:text-[1.9rem]">
                       {service.name}
                     </h3>
-                    <p className="gold-text gold-price mt-1.5 font-heading text-[1.5rem]">{service.price}</p>
                     <p className="mt-1 flex items-center gap-1.5 text-[11px] tracking-[0.12em] text-[#8A7972] uppercase">
                       <Clock className="size-3" aria-hidden /> {service.duration_min} min
                     </p>
@@ -367,7 +378,7 @@ export default function Home() {
                         onClick={() => pickService(service.id)}
                         testId={`service-select-btn-${service.id}`}
                       >
-                        Podrobněji
+                        Objednat
                       </SmallPill>
                     </div>
                   </div>
@@ -401,13 +412,12 @@ export default function Home() {
                     <h3 className="font-heading text-[1.2rem] leading-tight tracking-[0.12em] text-[#5E4238] uppercase">
                       {service.name}
                     </h3>
-                    <p className="gold-text gold-price mt-1 font-heading text-[1.3rem]">{service.price}</p>
                     <div className="mt-3">
                       <SmallPill
                         onClick={() => pickService(service.id)}
                         testId={`service-select-btn-${service.id}`}
                       >
-                        Podrobněji
+                        Objednat
                       </SmallPill>
                     </div>
                   </div>
@@ -596,6 +606,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== PROVOZOVNY ===== */}
+      <section id="provozovny" className="scroll-mt-24 px-3 pb-16 sm:px-5 sm:pb-20">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <SectionTitle testId="locations-section-title">Kde nás najdete</SectionTitle>
+            <p className="mx-auto mt-4 max-w-xl text-center text-[0.95rem] leading-relaxed text-[#8A7972]">
+              Pracuje u nás jedna technička, Martina — jeden týden v Krásné Lípě,
+              druhý v Neratovicích. Aktuální týden je vždy zvýrazněný.
+            </p>
+          </Reveal>
+          <Reveal delay={0.08} className="mt-10">
+            <LocationsSection />
+          </Reveal>
+        </div>
+      </section>
+
       {/* ===== REZERVACE ===== */}
       <section id="rezervace" className="scroll-mt-24 px-3 py-16 sm:px-5 sm:py-20">
         <div className="mx-auto max-w-4xl">
@@ -623,7 +649,7 @@ export default function Home() {
                 className="gap-2 rounded-full border-[#D9BFB2] bg-white/70 px-4 py-2 text-[#6B4F45]"
               >
                 <Stars />
-                4,9 / 5 z více než 380 recenzí
+                4,8 / 5 z více než 50 recenzí
               </Badge>
             </div>
           </Reveal>

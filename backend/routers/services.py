@@ -1,57 +1,82 @@
-"""Ceník studia — jediný zdroj pravdy pro služby."""
+"""Ceník studia — jediný zdroj pravdy pro služby.
 
-from fastapi import APIRouter
+Ceny se liší podle provozovny (Krásná Lípa / Neratovice), manikúra a pedikúra
+jsou na obou stejné.
+"""
+
+from fastapi import APIRouter, HTTPException
 
 from models.booking import Service
+from routers.locations import LOCATIONS_BY_ID
 
 router = APIRouter(tags=["services"])
 
+DEFAULT_LOCATION = "krasna-lipa"
+
 SERVICES: list[Service] = [
     Service(
-        id="klasicka-manikura",
-        name="Klasická manikúra",
-        price="450 Kč",
-        duration_min=45,
+        id="manikura",
+        name="Manikúra",
+        prices={"krasna-lipa": "380 Kč", "neratovice": "380 Kč"},
+        price="380 Kč",
+        duration_min=60,
         tag="Základní péče",
-        description="Kompletní ošetření nehtové kůžičky, zapilování do tvaru, vyživující lázeň a záverečný regenerační olejíček.",
+        description="Kompletní ošetření nehtové kůžičky, zapilování do tvaru, vyživující lázeň a závěrečný regenerační olejíček.",
     ),
     Service(
         id="gel-lak",
         name="Gel lak",
-        price="650 Kč",
+        prices={"krasna-lipa": "480 Kč", "neratovice": "580 Kč"},
+        price="480 Kč",
         duration_min=60,
         tag="Nejpopulárnější",
         description="Profesionální aplikace vysoce odolného šetrného gel laku s výdrží 3–4 týdny a zrcadlovým leskem.",
     ),
     Service(
-        id="modelaz-nehtu",
-        name="Modeláž nehtů",
-        price="950 Kč",
+        id="modelaz-nova",
+        name="Nová modeláž",
+        prices={"krasna-lipa": "650 Kč", "neratovice": "900 Kč"},
+        price="650 Kč",
         duration_min=120,
         tag="Prodloužení & zpevnění",
-        description="Prodloužení na šablonky prémiovým polygelem s precizním modelováním C-oblouku a maximální pevností.",
+        description="Prodloužení na šablonky prémiovým materiálem s precizním modelováním C-oblouku a maximální pevností.",
     ),
     Service(
-        id="nail-art",
-        name="Bespoke Nail Art",
-        price="od 100 Kč",
-        duration_min=30,
-        tag="Umělecký detail",
-        description="Ručně malované motivy, chromové pigmenty, minimalistické linky, ombré přechody a kamínky Swarovski.",
+        id="modelaz-doplneni",
+        name="Doplnění modeláže",
+        prices={"krasna-lipa": "530 Kč", "neratovice": "780 Kč"},
+        price="530 Kč",
+        duration_min=120,
+        tag="Údržba modeláže",
+        description="Doplnění dorostlé modeláže včetně úpravy tvaru, nového finiše a ošetření nehtového lůžka.",
     ),
     Service(
         id="pedikura",
-        name="Spa Pedikúra",
-        price="750 Kč",
+        name="Základní pedikúra",
+        prices={"krasna-lipa": "380 Kč", "neratovice": "380 Kč"},
+        price="380 Kč",
         duration_min=60,
         tag="Relaxace",
-        description="Komplexní přístrojová i mokrá pedikúra, peeling s himálajskou solí, úprava nehtů a uvolňující masáž chodidel.",
+        description="Mokrá pedikúra s peelingem, úpravou nehtů a zábalem — uvolnění pro nohy po celém dni.",
     ),
 ]
 
 SERVICES_BY_ID: dict[str, Service] = {s.id: s for s in SERVICES}
 
 
+def price_for(service: Service, location_id: str | None) -> str:
+    """Cena služby pro danou provozovnu (fallback = Krásná Lípa)."""
+    if location_id and location_id in service.prices:
+        return service.prices[location_id]
+    return service.prices.get(DEFAULT_LOCATION, service.price)
+
+
+def service_for_location(service: Service, location_id: str | None) -> Service:
+    return service.model_copy(update={"price": price_for(service, location_id)})
+
+
 @router.get("/services", response_model=list[Service])
-async def list_services() -> list[Service]:
-    return SERVICES
+async def list_services(location: str | None = None) -> list[Service]:
+    if location and location not in LOCATIONS_BY_ID:
+        raise HTTPException(status_code=400, detail="Neznámá provozovna.")
+    return [service_for_location(s, location or DEFAULT_LOCATION) for s in SERVICES]

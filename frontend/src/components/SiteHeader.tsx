@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button";
 import LogoBadge from "@/components/LogoBadge";
 
 const ANCHORS = [
-  { href: "#sluzby", label: "Ceník", num: "02" },
-  { href: "#galerie", label: "Ukázky", num: "03" },
+  { href: "#sluzby", label: "Služby", num: "02" },
   { href: "#kolekce", label: "Kolekce", num: "04" },
   { href: "#ai-studio", label: "AI design", num: "05" },
-  { href: "#recenze", label: "Recenze", num: "07" },
+  { href: "#provozovny", label: "Provozovny", num: "06" },
+  { href: "#recenze", label: "Recenze", num: "08" },
 ];
 
 export default function SiteHeader() {

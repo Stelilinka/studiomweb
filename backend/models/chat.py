@@ -31,6 +31,8 @@ class ChatReply(BaseModel):
     source: Literal["agent", "claude"] = "claude"
     # kroky, které asistentka udělala (pro jemný indikátor v UI)
     actions: list[str] = []
+    # URL vygenerovaného návrhu nehtů, pokud ho asistentka v této odpovědi vytvořila
+    image_url: Optional[str] = None
 
 
 class ChatHistory(BaseModel):

@@ -18,7 +18,10 @@ def utcnow() -> datetime:
 class Service(BaseModel):
     id: str
     name: str
+    # cena pro aktuálně vybranou provozovnu (kvůli zpětné kompatibilitě UI)
     price: str
+    # ceny podle provozovny: {"krasna-lipa": "480 Kč", "neratovice": "580 Kč"}
+    prices: dict[str, str] = {}
     duration_min: int
     tag: str
     description: str
@@ -26,6 +29,7 @@ class Service(BaseModel):
 
 class BookingCreate(BaseModel):
     service_id: str
+    location_id: Optional[str] = None
     date: str  # YYYY-MM-DD
     time: str  # HH:MM
     name: str = Field(min_length=2, max_length=120)
@@ -47,6 +51,8 @@ class Booking(BaseModel):
     service_name: str
     service_price: str
     service_duration_min: int
+    location_id: Optional[str] = None
+    location_name: Optional[str] = None
     date: str
     time: str
     name: str
@@ -77,6 +83,9 @@ class Availability(BaseModel):
     closed: bool = False
     message: Optional[str] = None
     slots: list[Slot] = []
+    # provozovna, kde se v tomto týdnu pracuje
+    location_id: Optional[str] = None
+    location_name: Optional[str] = None
 
 
 class CalendarStatus(BaseModel):
