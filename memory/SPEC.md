@@ -93,3 +93,11 @@ ukázkovým promptem). Idempotentní (přeskočí, pokud už rezervace existují
 - index.css: nové animace `marquee`, utilita `hairline-grid`.
 - ANTHROPIC_API_KEY vyměněn na nový funkční klíč (Klára odpovídá přes provider=anthropic, bez fallbacku).
 - Google Calendar stále MOCKED (chybí GOOGLE_CLIENT_SECRET).
+
+## Zlaté detaily, animace a segmenty nehtů (aktualizace)
+- `public/fotky/` — 46 PNG segmentů od klientky (vystřižené nehty, ruce, lahvičky). V kódu přes `SEGMENT_NAILS`, `COLLECTION_NAILS`, `HAND_CUTOUT` v `lib/photos.ts`.
+- Nová sekce `#kolekce` (SectionTitle „3D floral kolekce“) = komponenta `NailCollection.tsx`: běžící pás vystřižených nehtů (pauza při hoveru) + 8 karet se zlatými rámečky a aurou.
+- `GoldOrnament.tsx`: `GoldRule` (zlatá linka s rotujícím diamantem — pod všemi nadpisy sekcí), `GoldCorners`, `GoldDust`.
+- CSS animace: `float-soft`, `gold-sweep` (+ `gold-text`, `gold-rule`, `gold-frame`, `gold-price`), `gold-twinkle`, `spin-slow`, `marquee`.
+- Hero: plovoucí vystřižené nehty + ruka (cutout), zlatý prach; ceny služeb ve zlatém animovaném gradientu.
+- Logo: generovaný odznak „M / STUDIO NAILS“ (`STUDIO_LOGO`) v hlavičce (levý roh), Menu studia a patičce.

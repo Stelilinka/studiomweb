@@ -322,6 +322,65 @@
   filter: sepia(0.9) saturate(2.6) hue-rotate(-14deg) brightness(0.8) contrast(1.5);
 }
 
+/* plovoucí dekorace (vystřižené nehty) */
+@keyframes float-soft {
+    0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+    50% { transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+}
+
+@utility animate-float-soft {
+  animation: float-soft 7s ease-in-out infinite;
+}
+
+/* zlatý přejezd přes text i plochy */
+@keyframes gold-sweep {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@utility gold-text {
+  background-image: linear-gradient(100deg, #6F3F12 0%, #A06A28 18%, #D2A55A 34%, #A06A28 52%, #6F3F12 74%, #A06A28 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gold-sweep 9s linear infinite;
+}
+
+/* zlatá vlasová linka s leskem */
+/* zlatý text nad fotkou — přidá čitelnost */
+@utility gold-price {
+  filter: drop-shadow(0 1px 2px rgba(255, 250, 245, 0.9)) drop-shadow(0 0 8px rgba(255, 248, 238, 0.7));
+}
+
+@utility gold-rule {
+  background-image: linear-gradient(90deg, transparent 0%, #D8B183 30%, #FFF0D8 50%, #D8B183 70%, transparent 100%);
+  background-size: 200% 100%;
+  animation: gold-sweep 11s linear infinite;
+}
+
+/* zlatý rámeček, který se rozsvítí při hoveru */
+@utility gold-frame {
+  box-shadow: inset 0 0 0 1px rgba(201, 160, 111, 0.35);
+  transition: box-shadow 500ms ease;
+}
+
+@utility gold-frame-hover {
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 160, 111, 0.85),
+    0 18px 40px -26px rgba(154, 114, 68, 0.6);
+}
+
+/* jemné pulzování zlatého prachu */
+@keyframes gold-twinkle {
+    0%, 100% { opacity: 0.25; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+@utility animate-gold-twinkle {
+  animation: gold-twinkle 3.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

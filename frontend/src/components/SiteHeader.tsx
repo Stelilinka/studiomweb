@@ -10,8 +10,9 @@ import LogoBadge from "@/components/LogoBadge";
 const ANCHORS = [
   { href: "#sluzby", label: "Ceník", num: "02" },
   { href: "#galerie", label: "Ukázky", num: "03" },
-  { href: "#ai-studio", label: "AI design", num: "04" },
-  { href: "#recenze", label: "Recenze", num: "06" },
+  { href: "#kolekce", label: "Kolekce", num: "04" },
+  { href: "#ai-studio", label: "AI design", num: "05" },
+  { href: "#recenze", label: "Recenze", num: "07" },
 ];
 
 export default function SiteHeader() {
@@ -52,14 +53,14 @@ export default function SiteHeader() {
         >
           <LogoBadge className="w-11 shrink-0 sm:w-12" testId="header-logo-badge" />
           <span className="flex flex-col leading-none">
-            <span className="font-heading text-lg tracking-[0.22em] sm:text-xl text-[#5E4238] uppercase">
+            <span className="font-heading text-lg tracking-[0.22em] whitespace-nowrap sm:text-xl text-[#5E4238] uppercase">
               Studio M
             </span>
             <span className="font-script text-base text-[#B8776A]">krásné nehty na dosah ruky</span>
           </span>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Hlavní navigace">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8" aria-label="Hlavní navigace">
           {ANCHORS.map((a) => (
             <a
               key={a.href}
@@ -80,7 +81,7 @@ export default function SiteHeader() {
           <Link
             to="/admin"
             data-testid="nav-admin-portal-button"
-            className="hidden text-[12px] tracking-[0.16em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272] sm:block"
+            className="hidden text-[12px] tracking-[0.16em] text-[#A98F84] uppercase transition-colors duration-300 hover:text-[#C08272] md:block"
           >
             Správa
           </Link>

@@ -52,3 +52,26 @@ export const GALLERY_PHOTOS = [
   { src: NAIL_PHOTOS.nudeDetail, alt: "Elegantní nude nehty v detailu" },
   { src: NAIL_PHOTOS.heroRight, alt: "Modeláž nehtů se zdobením" },
 ] as const;
+
+// Vystřižené PNG segmenty od klientky (public/fotky) — jednotlivé nehty
+// s 3D květinovým zdobením, ideální pro plovoucí dekorace a kolekci.
+export const SEGMENT_NAILS = [
+  ...Array.from({ length: 13 }, (_, i) => `/fotky/3d-floral-nail-art-${i + 1}.png`),
+  ...Array.from({ length: 10 }, (_, i) => `/fotky/almond-shaped-nails-${i + 1}.png`),
+  ...Array.from({ length: 6 }, (_, i) => `/fotky/nude-pink-nail-polish-${i + 1}.png`),
+  ...Array.from({ length: 4 }, (_, i) => `/fotky/sage-green-nail-polish-${i + 1}.png`),
+] as const;
+
+// Ručně vybraná kolekce pro sekci „3D floral kolekce“
+export const COLLECTION_NAILS = [
+  { src: "/fotky/3d-floral-nail-art-3.png", name: "Sakura pearl", note: "3D květ s perletí" },
+  { src: "/fotky/almond-shaped-nails-5.png", name: "Blush almond", note: "mandle v nude tónu" },
+  { src: "/fotky/sage-green-nail-polish-2.png", name: "Sage blossom", note: "šalvěj se zdobením" },
+  { src: "/fotky/nude-pink-nail-polish-1.png", name: "Nude pink", note: "klasika se zlatou linkou" },
+  { src: "/fotky/3d-floral-nail-art-7.png", name: "Gold twig", note: "zlatá větvička" },
+  { src: "/fotky/almond-shaped-nails-9.png", name: "Pearl glaze", note: "glazed donut finiš" },
+  { src: "/fotky/3d-floral-nail-art-4.png", name: "Petite fleur", note: "drobné 3D kvítky" },
+  { src: "/fotky/sage-green-nail-polish-4.png", name: "Eucalyptus", note: "matná šalvěj" },
+] as const;
+
+export const HAND_CUTOUT = "/fotky/manicured-hands-1.png";

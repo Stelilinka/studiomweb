@@ -17,8 +17,10 @@ import {
 } from "lucide-react";
 import BookingWizard from "@/components/BookingWizard";
 import ChatAssistant from "@/components/ChatAssistant";
+import { GoldCorners, GoldDust, GoldRule } from "@/components/GoldOrnament";
 import LogoBadge from "@/components/LogoBadge";
 import MenuCards from "@/components/MenuCards";
+import NailCollection from "@/components/NailCollection";
 import NailPreview, {
   FINISH_LABELS,
   SHAPE_LABELS,
@@ -31,7 +33,14 @@ import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { Badge } from "@/components/ui/badge";
 import { apiGet } from "@/lib/api";
-import { GALLERY_PHOTOS, NAIL_PHOTOS, SERVICE_PHOTOS, SERVICE_PHOTO_FALLBACK } from "@/lib/photos";
+import {
+  GALLERY_PHOTOS,
+  HAND_CUTOUT,
+  NAIL_PHOTOS,
+  SEGMENT_NAILS,
+  SERVICE_PHOTOS,
+  SERVICE_PHOTO_FALLBACK,
+} from "@/lib/photos";
 import type { Service } from "@/types";
 
 const FEATURES = [
@@ -124,12 +133,11 @@ function Stars() {
 
 function SectionTitle({ children, testId }: { children: string; testId?: string }) {
   return (
-    <div className="flex items-center justify-center gap-4" data-testid={testId}>
-      <span className="h-px w-10 bg-gradient-to-r from-transparent to-[#D9BFB2] sm:w-20" aria-hidden />
+    <div className="flex flex-col items-center gap-3" data-testid={testId}>
       <h2 className="font-heading text-[1.5rem] tracking-[0.2em] text-[#6B4F45] uppercase sm:text-[1.95rem]">
         {children}
       </h2>
-      <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#D9BFB2] sm:w-20" aria-hidden />
+      <GoldRule />
     </div>
   );
 }
@@ -171,9 +179,32 @@ export default function Home() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-[28px] border border-[#EFDCD4] bg-gradient-to-br from-[#F8E6E0] via-[#FBF1EC] to-[#EFE0D6] shadow-[0_30px_70px_-40px_rgba(74,59,52,0.4)]"
+            className="gold-frame relative overflow-hidden rounded-[28px] border border-[#EFDCD4] bg-gradient-to-br from-[#F8E6E0] via-[#FBF1EC] to-[#EFE0D6] shadow-[0_30px_70px_-40px_rgba(74,59,52,0.4)]"
           >
             <Sparkles count={16} seed={2} color="#C79A7B" className="z-10" />
+            <GoldDust count={14} seed={3} />
+            {/* plovoucí vystřižené nehty od klientky */}
+            <img
+              src={SEGMENT_NAILS[2]}
+              alt=""
+              aria-hidden
+              className="animate-float-soft pointer-events-none absolute top-6 left-[30%] z-20 h-16 w-auto drop-shadow-[0_12px_22px_rgba(154,114,68,0.4)] sm:h-20"
+              style={{ ["--rot" as string]: "-14deg" }}
+            />
+            <img
+              src={SEGMENT_NAILS[15]}
+              alt=""
+              aria-hidden
+              className="animate-float-soft pointer-events-none absolute right-[32%] bottom-8 z-20 h-14 w-auto drop-shadow-[0_12px_22px_rgba(154,114,68,0.4)] [animation-delay:-2.5s] sm:h-[4.5rem]"
+              style={{ ["--rot" as string]: "12deg" }}
+            />
+            <img
+              src={HAND_CUTOUT}
+              alt=""
+              aria-hidden
+              className="animate-float-soft pointer-events-none absolute -right-6 -bottom-8 z-20 hidden h-56 w-auto drop-shadow-[0_24px_40px_rgba(154,114,68,0.35)] [animation-delay:-4s] lg:block"
+              style={{ ["--rot" as string]: "-6deg" }}
+            />
             <div className="grid items-stretch gap-0 lg:grid-cols-[1.05fr_1.5fr_1.05fr]">
               {/* levá fotka */}
               <div className="relative hidden min-h-[320px] lg:block">
@@ -351,7 +382,7 @@ export default function Home() {
                     <h3 className="font-heading text-[1.6rem] leading-tight tracking-[0.14em] text-[#5E4238] uppercase sm:text-[1.9rem]">
                       {service.name}
                     </h3>
-                    <p className="mt-1.5 font-heading text-[1.4rem] text-[#6B4F45]">{service.price}</p>
+                    <p className="gold-text gold-price mt-1.5 font-heading text-[1.5rem]">{service.price}</p>
                     <p className="mt-1 flex items-center gap-1.5 text-[11px] tracking-[0.12em] text-[#8A7972] uppercase">
                       <Clock className="size-3" aria-hidden /> {service.duration_min} min
                     </p>
@@ -394,7 +425,7 @@ export default function Home() {
                     <h3 className="font-heading text-[1.2rem] leading-tight tracking-[0.12em] text-[#5E4238] uppercase">
                       {service.name}
                     </h3>
-                    <p className="mt-1 font-heading text-[1.25rem] text-[#6B4F45]">{service.price}</p>
+                    <p className="gold-text gold-price mt-1 font-heading text-[1.3rem]">{service.price}</p>
                     <div className="mt-3">
                       <SmallPill
                         onClick={() => pickService(service.id)}
@@ -451,6 +482,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== 3D FLORAL KOLEKCE (vystřižené nehty klientky) ===== */}
+      <section id="kolekce" className="relative scroll-mt-24 px-3 pb-16 sm:px-5 sm:pb-20">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <SectionTitle testId="collection-section-title">3D floral kolekce</SectionTitle>
+            <p className="mx-auto mt-4 max-w-xl text-center text-[0.95rem] leading-relaxed text-[#8A7972]">
+              Naše nejoblíbenější zdobení do posledního detailu — 3D kvítky, perleť
+              a ručně malované zlaté větvičky. Najeďte myší a pás se zastaví.
+            </p>
+          </Reveal>
+          <Reveal delay={0.08} className="mt-6">
+            <NailCollection />
+          </Reveal>
+        </div>
+      </section>
+
       {/* ===== AI STUDIO ===== */}
       <section id="ai-studio" className="scroll-mt-24 bg-[#F3E4DC] px-3 py-16 sm:px-5 sm:py-20">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
@@ -464,6 +511,7 @@ export default function Home() {
             <p className="mt-2 font-script text-2xl text-[#B8776A]">
               a my to uvidíme dřív, než přijdete
             </p>
+            <GoldRule className="mt-5 justify-start" />
             <p className="mt-5 max-w-lg text-[0.95rem] leading-relaxed text-[#6B4F45]">
               Při rezervaci napíšete svůj vysněný design. Agent Claude z popisu
               připraví precizní zadání a druhý agent vygeneruje fotorealistický
@@ -670,6 +718,8 @@ export default function Home() {
                 aria-hidden
               />
               <Sparkles count={14} seed={6} color="#C08272" />
+              <GoldDust count={12} seed={7} />
+              <GoldCorners />
               <div className="relative px-8 py-14 text-center sm:px-14">
                 <SparkIcon className="mx-auto size-6 text-[#C08272]" strokeWidth={1.2} aria-hidden />
                 <h2 className="mt-4 font-heading text-2xl tracking-[0.1em] text-[#5E4238] uppercase sm:text-3xl">
